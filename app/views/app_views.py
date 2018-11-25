@@ -2,6 +2,9 @@
 from flask import Flask
 from flask import request
 from flask import jsonify
+from ..controller.app_controller import all_incidents
+from ..controller.app_controller import error_route
+from ..controller.app_controller import index
 
 # create app
 app = Flask(__name__)
@@ -12,11 +15,7 @@ app = Flask(__name__)
 @app.route('/')
 def home():
     """ This is the index route."""
-    data = [{'message': 'Welcome to the iReporter Site.'}]
-    return jsonify({
-        'data': data,
-        'status': 200,
-    }), 200
+    return index()
 
 @app.route('/red-flags', methods=['POST'])
 def create_ireport():
@@ -34,17 +33,12 @@ def create_ireport():
         'status': 200
     }), 200
 
+@app.route('/red-flags', methods=['GET'])
+def get_all_redflags():
+    """ App route to fetch all red flags."""
+    return all_incidents()
+
 @app.errorhandler(404)
 def page_not_found(e):
     """ Error handle route for this app."""
-
-    data = [
-        {
-            'Issue': 'You have entered an unknown URL.',
-            'message': 'Please do contact Derrick Sekidde for more details on this.'
-        }
-    ]
-    return jsonify({
-        'status': 404,
-        'data': data
-    })
+    return error_route()
