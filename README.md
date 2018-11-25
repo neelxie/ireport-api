@@ -3,9 +3,8 @@ iReporter enables any/every citizen to bring any form of corruption to the notic
 
 [![Build Status](https://travis-ci.org/neelxie/ireport-api.svg?branch=develop)](https://travis-ci.org/neelxie/ireport-api)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/a439c5890cce4f94b3b50e53036c014e)](https://www.codacy.com/app/neelxie/ireport-api?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=neelxie/ireport-api&amp;utm_campaign=Badge_Grade)
-[![Coverage Status](https://coveralls.io/repos/github/neelxie/ireport-api/badge.svg?branch=develop)](https://coveralls.io/github/neelxie/sendApi?branch=develop)
-[![Maintainability](https://api.codeclimate.com/v1/badges/ec4df4bc881ee34bf6a2/maintainability)](https://codeclimate.com/github/neelxie/ireport-api/maintainability)
-
+[![Coverage Status](https://coveralls.io/repos/github/neelxie/ireport-api/badge.svg?branch=develop)](https://coveralls.io/github/neelxie/ireport-api?branch=develop)
+[![Maintainability](https://api.codeclimate.com/v1/badges/aee377f03ebc940278a0/maintainability)](https://codeclimate.com/github/neelxie/ireport-api/maintainability)
 
 <b> Site has been built with.</b>
 *   Language - Python
@@ -20,14 +19,14 @@ iReporter enables any/every citizen to bring any form of corruption to the notic
 
 # Features
 
-  | REQUESTS     | APP ROUTES                              | FUNCTION                         
+  | REQUESTS     | APP ROUTES                              | FUNCTION                         |
   |--------------|----------------------------------------------------------------------------|
   |  GET         | /api/v1/red-flags                       | Fetch all red-flags records.     |
   |  GET         | /api/v1/red-flags/[red_flag_id]         | Fetch a specific red-flag by id. |
   |  PATCH       | /api/v1/red-flags/[red_flag_id]/location| Edit location of red-flag.       |
   |  PATCH       | /api/v1/red-flags/[red_flag_id]/comment | Edit comment of red-flag.        |
   |  POST        | /api/v1/red-flags                       | Create a red-flag record.        |
-  |  POST        | /api/v1/users                           |                                  |  
+  |  POST        | /api/v1/users                           | ye                               |  
 
 # Installation:
 
