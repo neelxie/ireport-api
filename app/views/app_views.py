@@ -6,6 +6,7 @@ from ..controller.app_controller import all_incidents
 from ..controller.app_controller import error_route
 from ..controller.app_controller import index
 from ..controller.app_controller import one_redflag
+from ..controller.app_controller import edit_location
 
 # create app
 app = Flask(__name__)
@@ -43,6 +44,11 @@ def get_all_redflags():
 def get_specific_redflag(red_flag_id):
     """ This route fetchs a single red flag."""
     return one_redflag(red_flag_id)
+
+@app.route('/red-flags/<red_flag_id>/location', methods=['PATCH'])
+def new_location(red_flag_id):
+    """ This route fetchs a single red flag."""
+    return edit_location(red_flag_id)
 
 
 @app.errorhandler(404)

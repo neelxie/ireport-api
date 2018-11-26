@@ -1,5 +1,6 @@
 from datetime import datetime
 from flask import jsonify
+from flask import request
 from ..models.model_redflags import REDFLAGS
 
 empty_list = [{'message':'There are no red flags.'}]
@@ -49,6 +50,22 @@ def one_redflag(red_flag_id):
         "data": no_item,
         'status': 400
     })
+
+def edit_location(red_flag_id):
+    
+        """ Method to change a redflag location."""
+        new_data = request.get_json()
+        for redflag in REDFLAGS:
+            if redflag.get("red_flag_id") == int(red_flag_id):
+                data = redflag
+        if data:
+            if not data['status'] == 'Draft':
+                return jsonify(
+                    {"error": "Can only edit location when red flag status is Draft."})
+            data['location'] = new_data['location']
+            return jsonify(
+                {"msg": "Updated red-flag record's location."}), 200
+        return jsonify({"error": "Can not cancel non existant redflag order."})
 
 def error_route():
     """ function for 404 error."""
