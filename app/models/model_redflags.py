@@ -1,4 +1,5 @@
 """ File contains model for red-flag."""
+
 import datetime
 # red flags list
 REDFLAGS = [
@@ -14,7 +15,7 @@ REDFLAGS = [
 ]
 
 
-class Redflag:
+class Incident:
     """    Redflags class."""
     # Class constructor
 
@@ -29,4 +30,4 @@ class Redflag:
 #       Images  =
 #       Videos  =
         self.comment = comment
-        REDFLAGS.append(self)
+        REDFLAGS.append(dict(self))
