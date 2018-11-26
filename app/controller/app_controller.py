@@ -51,8 +51,7 @@ def one_redflag(red_flag_id):
         'status': 400
     })
 
-def edit_location(red_flag_id):
-    
+def edit_location(red_flag_id):  
         """ Method to change a redflag location."""
         new_data = request.get_json()
         for redflag in REDFLAGS:
@@ -65,7 +64,29 @@ def edit_location(red_flag_id):
             data['location'] = new_data['location']
             return jsonify(
                 {"msg": "Updated red-flag record's location."}), 200
-        return jsonify({"error": "Can not cancel non existant redflag order."})
+        return jsonify({"error": "Can not change location of non existant redflag."})
+
+def change_comment(red_flag_id):   
+        """ Method to change a redflag record comment."""
+        new_data = request.get_json()
+        for redflag in REDFLAGS:
+            if redflag.get("red_flag_id") == int(red_flag_id):
+                data = redflag
+        if data:
+            if not data['status'] == 'Draft':
+                return jsonify(
+                    {"error": "Can only edit comment when red flag status is Draft."})
+            data['comment'] = new_data['comment']
+            return jsonify(
+                {"msg": "Updated red-flag record's comment."}), 200
+        return jsonify({"error": "Can not change comment of non existant redflag."})
+
+def delete_redflag(red_flag_id):
+    for redflag in REDFLAGS:
+        if redflag.get("red_flag_id") == int(red_flag_id):
+            data = redflag
+    del REDFLAGS[int(red_flag_id) - 1]
+    return jsonify({'message': 'red-flag record has been deleted.'})
 
 def error_route():
     """ function for 404 error."""
