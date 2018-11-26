@@ -5,6 +5,7 @@ from flask import jsonify
 from ..controller.app_controller import all_incidents
 from ..controller.app_controller import error_route
 from ..controller.app_controller import index
+from ..controller.app_controller import one_redflag
 
 # create app
 app = Flask(__name__)
@@ -38,7 +39,13 @@ def get_all_redflags():
     """ App route to fetch all red flags."""
     return all_incidents()
 
+@app.route('/red-flags/<red_flag_id>', methods=['GET'])
+def get_specific_redflag(red_flag_id):
+    """ This route fetchs a single red flag."""
+    return one_redflag(red_flag_id)
+
+
 @app.errorhandler(404)
 def page_not_found(e):
-    """ Error handle route for this app."""
+    """ Error handler route for this app."""
     return error_route()

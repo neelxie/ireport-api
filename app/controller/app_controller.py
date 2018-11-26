@@ -1,8 +1,9 @@
 from datetime import datetime
 from flask import jsonify
-# from models.model_redflags import Redflag
-# from models.model_redflags import REDFLAGS
 from ..models.model_redflags import REDFLAGS
+
+empty_list = [{'message':'There are no red flags.'}]
+no_item = [{'Error':"No redflag by that ID in REDFLAGS list."}]
 
 def index():
     """ function for the index route."""
@@ -16,7 +17,7 @@ def post_redflag():
 
     request_data = request.get_json()
     red = {
-        'record_id': len(REDFLAGS) + 1, 
+        'red_flag_id': len(REDFLAGS) + 1, 
         'created_on': str(datetime.now()),
         'created_by': request_data['created_by'],
         'record_type': 'RedFlag',
@@ -26,7 +27,7 @@ def post_redflag():
     }
 
 def all_incidents():
-    empty_list = [{'message':'There are no red flags.'}]
+    
     if not REDFLAGS:
         return jsonify({
             'status': 200,
@@ -34,8 +35,20 @@ def all_incidents():
         }), 200
     return jsonify({
         'status': 200,
-        'data': REDFLAGS
+        'All Redflags': REDFLAGS
     }), 200
+
+def one_redflag(red_flag_id):
+    specific_redflag = [redflag for redflag in REDFLAGS if redflag.get("red_flag_id") == int(red_flag_id)]
+    if specific_redflag:
+        return jsonify({
+            "One Redflag": specific_redflag,
+            'status': 200
+        }), 200
+    return jsonify({
+        "data": no_item,
+        'status': 400
+    })
 
 def error_route():
     """ function for 404 error."""
