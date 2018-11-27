@@ -2,6 +2,13 @@
 from flask import Flask
 from flask import request
 from flask import jsonify
+from ..controller.app_controller import all_incidents
+from ..controller.app_controller import error_route
+from ..controller.app_controller import index
+from ..controller.app_controller import one_redflag
+from ..controller.app_controller import edit_location
+from ..controller.app_controller import change_comment
+from ..controller.app_controller import delete_redflag
 
 # create app
 app = Flask(__name__)
@@ -12,11 +19,7 @@ app = Flask(__name__)
 @app.route('/')
 def home():
     """ This is the index route."""
-    data = [{'message': 'Welcome to the iReporter Site.'}]
-    return jsonify({
-        'data': data,
-        'status': 200,
-    }), 200
+    return index()
 
 @app.route('/red-flags', methods=['POST'])
 def create_ireport():
@@ -34,17 +37,33 @@ def create_ireport():
         'status': 200
     }), 200
 
+@app.route('/red-flags', methods=['GET'])
+def get_all_redflags():
+    """ App route to fetch all red flags."""
+    return all_incidents()
+
+@app.route('/red-flags/<red_flag_id>', methods=['GET'])
+def get_specific_redflag(red_flag_id):
+    """ This route fetchs a single red flag."""
+    return one_redflag(red_flag_id)
+
+@app.route('/red-flags/<red_flag_id>/location', methods=['PATCH'])
+def new_location(red_flag_id):
+    """ Route to edit red flag location."""
+    return edit_location(red_flag_id)
+
+@app.route('/red-flags/<red_flag_id>/comment', methods=['PATCH'])
+def edit_record_comment(red_flag_id):
+    """ This route changes record comment of a single red flag."""
+    return change_comment(red_flag_id)
+
+@app.route('/red-flags/<red_flag_id>', methods=['DELETE'])
+def delete_record(red_flag_id):
+    """ Route to delete a red flag."""
+    return delete_redflag(red_flag_id)
+
+
 @app.errorhandler(404)
 def page_not_found(e):
-    """ Error handle route for this app."""
-
-    data = [
-        {
-            'Issue': 'You have entered an unknown URL.',
-            'message': 'Please do contact Derrick Sekidde for more details on this.'
-        }
-    ]
-    return jsonify({
-        'status': 404,
-        'data': data
-    })
+    """ Error handler route for this app."""
+    return error_route()

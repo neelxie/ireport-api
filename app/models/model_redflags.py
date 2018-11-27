@@ -1,16 +1,27 @@
 """ File contains model for red-flag."""
 
+import datetime
 # red flags list
-REDFLAGS = []
+REDFLAGS = [
+    {
+        'red_flag_id': 1, 
+        'created_on': str(datetime.datetime.now()),
+        'created_by': 1,
+        'record_type': 'RedFlag',
+        'location': '235565', 
+        'status': 'Draft', 
+        'comment': 'Nepotism'
+    }
+]
 
 
-class Redflag:
+class Incident:
     """    Redflags class."""
     # Class constructor
 
-    def __init__(self, record_id, created_on, created_by,
+    def __init__(self, red_flag_id, created_on, created_by,
                  record_type, location, status, comment):
-        self.record_id = record_id
+        self.red_flag_id = red_flag_id
         self.created_on = created_on
         self.created_by = created_by
         self.record_type = record_type
@@ -19,4 +30,4 @@ class Redflag:
 #       Images  = str()
 #       Videos  = str()
         self.comment = comment
-        REDFLAGS.append(self)
+        REDFLAGS.append(dict(self))
