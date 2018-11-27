@@ -16,7 +16,7 @@ class Redflag:
         self.record_type = record_type
         self.location = location
         self.status = status
-#       Images  =
-#       Videos  =
+#       Images  = str()
+#       Videos  = str()
         self.comment = comment
         REDFLAGS.append(self)
