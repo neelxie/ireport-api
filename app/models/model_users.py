@@ -1,7 +1,19 @@
 """ This is the Users' models file."""
 
 # A list to contain all app users.
-USERS = []
+USERS = [
+    {
+        "user_id": 1,
+        "first_name": "Greatest",
+        "last_name": "Coder",
+        "other_name": "Ever",
+        "email": "dede@cia.gov",
+        "phone_number": 0705828612,
+        "user_name": "haxor",
+        "registered": True,
+        "is_admin": True
+    }
+]
 
 
 class Users:
@@ -19,4 +31,18 @@ class Users:
         self.user_name = user_name
         self.registered = registered
         self.is_admin = is_admin
-        USERS.append(self)
+
+    def to_json(self):
+        """ This method changes class to dict."""
+        one_user = {
+            "user_id": self.user_id,
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+            "other_name": self.other_name,
+            "email": self.email,
+            "phone_number": self.phone_number,
+            "user_name": self.user_name,
+            "registered": self.registered,
+            "is_admin": self.is_admin
+        }
+        return one_user

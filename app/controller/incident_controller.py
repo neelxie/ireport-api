@@ -1,13 +1,15 @@
 from datetime import datetime
 from flask import jsonify
 from flask import request
-from ..models.model_redflags import REDFLAGS
+from ..models.model_incident import REDFLAGS
+from ..models.model_incident import Incident
 
 empty_list = [{'message':'There are no red flags.'}]
 no_item = [{'Error':"No redflag by that ID in REDFLAGS list."}]
 
 def index():
     """ function for the index route."""
+    
     data = [{'message': 'Welcome to the iReporter Site.'}]
     return jsonify({
         'data': data,
@@ -15,17 +17,23 @@ def index():
     }), 200
     
 def post_redflag():
+    """ This method creates a new incident."""
 
-    request_data = request.get_json()
-    red = {
-        'red_flag_id': len(REDFLAGS) + 1, 
-        'created_on': str(datetime.now()),
-        'created_by': request_data['created_by'],
-        'record_type': 'RedFlag',
-        'location': request_data['location'], 
-        'status': 'Draft', 
-        'comment': request_data['comment ']
-    }
+    request_data = request.get_json() 
+    incident_id = len(REDFLAGS) + 1
+    created_on = str(datetime.now())
+    created_by = request_data.get('created_by')
+    record_type = 'RedFlag'
+    location = request_data.get('location')
+    status = 'Draft'
+    comment = request_data.get('comment')
+    
+    my_redflag = Incident(incident_id, created_on, created_by, record_type, location, status, comment)
+    REDFLAGS.append(my_redflag.to_dict())
+    return jsonify({
+        "msg": "start",
+        "data": my_redflag.to_dict()
+    }), 201
 
 def all_incidents():
     
@@ -39,8 +47,9 @@ def all_incidents():
         'All Redflags': REDFLAGS
     }), 200
 
-def one_redflag(red_flag_id):
-    specific_redflag = [redflag for redflag in REDFLAGS if redflag.get("red_flag_id") == int(red_flag_id)]
+def one_redflag(incident_id):
+    """ Function to fetch a red flag by ID."""
+    specific_redflag = [redflag for redflag in REDFLAGS if redflag.get("incident_id") == int(incident_id)]
     if specific_redflag:
         return jsonify({
             "One Redflag": specific_redflag,
@@ -51,11 +60,11 @@ def one_redflag(red_flag_id):
         'status': 400
     })
 
-def edit_location(red_flag_id):  
+def edit_location(incident_id):  
         """ Method to change a redflag location."""
         new_data = request.get_json()
         for redflag in REDFLAGS:
-            if redflag.get("red_flag_id") == int(red_flag_id):
+            if redflag.get("incident_id") == int(incident_id):
                 data = redflag
         if data:
             if not data['status'] == 'Draft':
@@ -66,11 +75,11 @@ def edit_location(red_flag_id):
                 {"msg": "Updated red-flag record's location."}), 200
         return jsonify({"error": "Can not change location of non existant redflag."})
 
-def change_comment(red_flag_id):   
+def change_comment(incident_id):   
         """ Method to change a redflag record comment."""
         new_data = request.get_json()
         for redflag in REDFLAGS:
-            if redflag.get("red_flag_id") == int(red_flag_id):
+            if redflag.get("incident_id") == int(incident_id):
                 data = redflag
         if data:
             if not data['status'] == 'Draft':
@@ -81,11 +90,10 @@ def change_comment(red_flag_id):
                 {"msg": "Updated red-flag record's comment."}), 200
         return jsonify({"error": "Can not change comment of non existant redflag."})
 
-def delete_redflag(red_flag_id):
+def delete_redflag(incident_id):
     for redflag in REDFLAGS:
-        if redflag.get("red_flag_id") == int(red_flag_id):
-            data = redflag
-    del REDFLAGS[int(red_flag_id) - 1]
+        if redflag.get("incident_id") == int(incident_id):
+            del REDFLAGS[int(incident_id) - 1]
     return jsonify({'message': 'red-flag record has been deleted.'})
 
 def error_route():
