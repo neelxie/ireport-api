@@ -1,48 +1,56 @@
 """ This is the Users' models file."""
+import datetime
 
 # A list to contain all app users.
-USERS = [
+users = [
     {
         "user_id": 1,
         "first_name": "Greatest",
         "last_name": "Coder",
         "other_name": "Ever",
         "email": "dede@cia.gov",
-        "phone_number": 0705828612,
+        "phone_number": '0705828612',
         "user_name": "haxor",
-        "registered": True,
+        "registered": "2018-11-29 10:10:02.086352",
         "is_admin": True
     }
 ]
 
 
-class Users:
+class UserModel:
     """ This is the app Users' class."""
 
-    def __init__(self, user_id, first_name, last_name, other_name,
-                 email, phone_number, user_name, registered, is_admin):
-        """ The app Users' constructor."""
-        self.user_id = user_id
-        self.first_name = first_name
-        self.last_name = last_name
-        self.other_name = other_name
-        self.email = email
-        self.phone_number = phone_number
-        self.user_name = user_name
-        self.registered = registered
-        self.is_admin = is_admin
+    def __init__(self):
+        """ class Constructor."""
+        self.users = users
+        
+    def create_user(self, args):
+        """ Method to create user."""
+        user = dict(
+            user_id=len(users) + 1,
+            first_name=args['first_name'],
+            last_name=args["last_name"],
+            other_name=args["other_name"],
+            email=args["email"],
+            phone_number=args["phone_number"],
+            user_name=args["user_name"],
+            registered=str(datetime.datetime.now()),
+            is_admin=args["is_admin"]
+        )
+        users.append(user)
 
-    def to_json(self):
-        """ This method changes class to dict."""
-        one_user = {
-            "user_id": self.user_id,
-            "first_name": self.first_name,
-            "last_name": self.last_name,
-            "other_name": self.other_name,
-            "email": self.email,
-            "phone_number": self.phone_number,
-            "user_name": self.user_name,
-            "registered": self.registered,
-            "is_admin": self.is_admin
-        }
-        return one_user
+        return user
+
+    def get_one_user(self, user_id):
+        """ Method to fetch details of one user."""
+        
+        item = [user for user in users if user['user_id'] == user_id]
+
+        if item:
+            return item[0]
+        return None
+
+    def get_users(self):
+        """ Admin method to fetch all users."""
+        return self.users
+

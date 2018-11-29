@@ -2,70 +2,73 @@
 from flask import Flask
 from flask import request
 from flask import jsonify
-from app.controller.incident_controller import all_incidents
-from app.controller.incident_controller import error_route
-from app.controller.incident_controller import index
-from app.controller.incident_controller import one_redflag
-from app.controller.incident_controller import edit_location
-from app.controller.incident_controller import change_comment
-from app.controller.incident_controller import delete_redflag
-from app.controller.incident_controller import post_redflag
+from app.controller.incident_controller import IncidentController
+from app.controller.user_controller import UserController
 
 # create app
 app = Flask(__name__)
 
 # app.config['SECRET_KEY'] = 'IAM-the-Greatest-Coder-Ever!'
 
+incendent_controller = IncidentController()
+my_user = UserController()
 
 @app.route('/')
 def home():
     """ This is the index route."""
-    return index()
+    return incendent_controller.index()
 
 @app.route('/red-flags', methods=['POST'])
-def create_ireport():
+def create_redflag():
     """ Route to create an incident. Specifically for now
         a red flag. """
-    # error_data = [{'error': 'No data has been entered.'}]
-    # success_data = [{'message': 'Successfully Added.'}]
-    # if not request_data:
-    #     return jsonify({
-    #         'data': error_data,
-    #         'status': 400
-    #     }), 400
-    # return jsonify({
-    #     'data': success_data,
-    #     'status': 200
-    # }), 200
-    return post_redflag()
+    data = request.get_json()
+    return incendent_controller.add_incident(data)
 
 @app.route('/red-flags', methods=['GET'])
 def get_all_redflags():
     """ App route to fetch all red flags."""
-    return all_incidents()
+    return incendent_controller.get_incidents()
 
-@app.route('/red-flags/<incident_id>', methods=['GET'])
+@app.route('/red-flags/<int:incident_id>', methods=['GET'])
 def get_specific_redflag(incident_id):
     """ This route fetchs a single red flag."""
-    return one_redflag(incident_id)
+    return incendent_controller.get_incident(incident_id)
 
-@app.route('/red-flags/<incident_id>/location', methods=['PATCH'])
-def new_location(incident_id):
-    """ Route to edit red flag location."""
-    return edit_location(incident_id)
+@app.route('/users', methods=['POST'])
+def signup():
+    """ Route to create a user. """
+    data = request.get_json()
+    return my_user.register_user(data)
 
-@app.route('/red-flags/<incident_id>/comment', methods=['PATCH'])
-def edit_record_comment(incident_id):
-    """ This route changes record comment of a single red flag."""
-    return change_comment(incident_id)
+@app.route('/users', methods=['GET'])
+def app_users():
+    """ Route to fetch all users."""
+    return my_user.fetch_users()
 
-@app.route('/red-flags/<incident_id>', methods=['DELETE'])
+@app.route('/users/<int:user_id>', methods=['GET'])
+def login(user_id):
+    """ This route fetchs a single."""
+    return my_user.fetch_one_user(user_id)
+
+# @app.route('/red-flags/<incident_id>/location', methods=['PATCH'])
+# def new_location(incident_id):
+#     """ Route to edit red flag location."""
+#     return edit_location(incident_id)
+
+# @app.route('/red-flags/<incident_id>/comment', methods=['PATCH'])
+# def edit_record_comment(incident_id):
+#     """ This route changes record comment of a single red flag."""
+#     return change_comment(incident_id)
+
+@app.route('/red-flags/<int:incident_id>', methods=["DELETE"])
 def delete_record(incident_id):
     """ Route to delete a red flag."""
-    return delete_redflag(incident_id)
+    return incendent_controller.delete_incident(incident_id)
 
 
 @app.errorhandler(404)
 def page_not_found(e):
     """ Error handler route for this app."""
-    return error_route()
+    return incendent_controller.error_route()
+    

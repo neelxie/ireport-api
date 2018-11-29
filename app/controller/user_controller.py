@@ -1,84 +1,50 @@
 from flask import jsonify
 from flask import request
 from datetime import datetime
-from ..models.model_users import USERS
-from ..models.model_users import Users
+from ..models.model_users import UserModel
 
-def create_user():
-    """ This method creates a new app user."""
-    user_data = request.get_json() 
-    incident_id = len(USERS) + 1
-    created_on = str(datetime.now())
-    created_by = request_data.get('created_by')
-    record_type = 'RedFlag'
-    location = request_data.get('location')
-    status = 'Draft'
-    comment = request_data.get('comment')
-    
-    my_redflag = Incident(incident_id, created_on, created_by, record_type, location, status, comment)
-    USERS.append(my_redflag.to_dict())
-    return jsonify({
-        "msg": "start",
-        "data": my_redflag.to_dict()
-    }), 201
+user_model = UserModel()
 
-def all_incidents():
-    
-    if not USERS:
+class UserController:
+    """ Class for user controller."""
+
+    def __init__(self):
+        """ Class constructor for the User Controller."""
+        self.users = []
+
+    def register_user(self, args):
+        """ Method to add user."""
+        user = user_model.create_user(args)
+
+        if not user or user is None:
+            return jsonify({
+                'message':'sorry! no users were found'
+            }), 200
         return jsonify({
-            'status': 200,
-            'data': empty_list
-        }), 200
-    return jsonify({
-        'status': 200,
-        'All USERS': USERS
-    }), 200
+            'message': 'successfully created red flag',
+            'users': user
+        }), 201
 
-def one_redflag(incident_id):
-    """ Function to fetch a red flag by ID."""
-    specific_redflag = [redflag for redflag in USERS if redflag.get("incident_id") == int(incident_id)]
-    if specific_redflag:
+    def fetch_users(self):
+        """ Administrator method to retrieve all users."""
+        users = user_model.get_users()
+        if  not users or users is None or len(users) < 1:
+            return jsonify({
+                'message':'sorry! no users were found'
+            }), 200
         return jsonify({
-            "One Redflag": specific_redflag,
-            'status': 200
+            'message': 'success',
+            'users': users
         }), 200
-    return jsonify({
-        "data": no_item,
-        'status': 400
-    })
 
-def edit_location(incident_id):  
-        """ Method to change a redflag location."""
-        new_data = request.get_json()
-        for redflag in USERS:
-            if redflag.get("incident_id") == int(incident_id):
-                data = redflag
-        if data:
-            if not data['status'] == 'Draft':
-                return jsonify(
-                    {"error": "Can only edit location when red flag status is Draft."})
-            data['location'] = new_data['location']
-            return jsonify(
-                {"msg": "Updated red-flag record's location."}), 200
-        return jsonify({"error": "Can not change location of non existant redflag."})
-
-def change_comment(incident_id):   
-        """ Method to change a redflag record comment."""
-        new_data = request.get_json()
-        for redflag in USERS:
-            if redflag.get("incident_id") == int(incident_id):
-                data = redflag
-        if data:
-            if not data['status'] == 'Draft':
-                return jsonify(
-                    {"error": "Can only edit comment when red flag status is Draft."})
-            data['comment'] = new_data['comment']
-            return jsonify(
-                {"msg": "Updated red-flag record's comment."}), 200
-        return jsonify({"error": "Can not change comment of non existant redflag."})
-
-def delete_redflag(incident_id):
-    for redflag in USERS:
-        if redflag.get("incident_id") == int(incident_id):
-            del USERS[int(incident_id) - 1]
-    return jsonify({'message': 'red-flag record has been deleted.'})
+    def fetch_one_user(self, user_id):
+        """ Class method to get single user by ID."""
+        user = user_model.get_one_user(user_id)
+        if not user or user is None:
+            return jsonify({
+                'message':'sorry! user with Id not found'
+            }), 200
+        return jsonify({
+            'message': 'success',
+            'Single user': user
+        }), 200

@@ -2,46 +2,61 @@
 
 import datetime
 
-# red flags list
-REDFLAGS = [
+# incidents list
+incidents = [
     {
-        'incident_id': 1, 
-        'created_on': "",
-        'created_by': 1,
-        'record_type': 'RedFlag',
-        'location': '235565', 
-        'status': 'Draft', 
-        'comment': 'Nepotism'
+        "comment": "silliness",
+        "created_by": 1,
+        "created_on": "2018-11-29 10:04:38.919951",
+        "incident_id": 1,
+        "location": "waka",
+        "record_type": "RedFlag",
+        "status": "Draft"
+    },
+    {
+        "comment": "goodness",
+        "created_by": 1,
+        "created_on": "2018-11-29 10:10:02.086352",
+        "incident_id": 2,
+        "location": "yapp",
+        "record_type": "RedFlag",
+        "status": "Draft"
     }
 ]
 
 
-class Incident:
-    """    Redflags class."""
-    # Class constructor
-    
-    def __init__(self, incident_id, created_on, created_by,
-                 record_type, location, status, comment):
-        self.incident_id = incident_id
-        self.created_on = created_on
-        self.created_by = created_by
-        self.record_type = record_type
-        self.location = location
-        self.status = status
-#       Images  = str()
-#       Videos  = str()
-        self.comment = comment
+class IncidentModel:
+    """ Incidents class."""
 
-    def to_dict(self):
-        red_flag = {
-            "incident_id" : self.incident_id,
-            "created_on" : self.created_on,
-            "created_by" : self.created_by,
-            "record_type" : self.record_type,
-            "location" : self.location,
-            "status" : self.status,
-#       Images  = str()
-#       Videos  = str()
-            "comment" : self.comment
-        }
-        return red_flag
+    # Class constructor
+    def __init__(self):
+        self.incidents = incidents
+
+    def create_incident(self, args):
+        """ class method to create a red flag incident."""
+        incident = dict(
+            incident_id=len(incidents) + 1,
+            created_on=str(datetime.datetime.now()),
+            created_by=args['created_by'],
+            record_type='RedFlag',
+            location=args['location'],
+            status='Draft',
+            comment=args['comment']
+        )
+
+        incidents.append(incident)
+
+        return incident
+
+    def get_incidents(self):
+        """ This method of the class gets all incidents."""
+        return self.incidents
+
+    def get_incident(self, incident_id):
+        """ Method to get an incident by ID."""
+
+        for incident in incidents:
+            if incident['incident_id'] == incident_id:
+                return incident
+
+        return None
