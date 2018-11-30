@@ -51,15 +51,15 @@ def login(user_id):
     """ This route fetchs a single."""
     return my_user.fetch_one_user(user_id)
 
-# @app.route('/red-flags/<incident_id>/location', methods=['PATCH'])
-# def new_location(incident_id):
-#     """ Route to edit red flag location."""
-#     return edit_location(incident_id)
+@app.route('/red-flags/<incident_id>/location', methods=['PATCH'])
+def new_location(incident_id):
+    """ Route to edit red flag location."""
+    return incendent_controller.edit_location(incident_id)
 
-# @app.route('/red-flags/<incident_id>/comment', methods=['PATCH'])
-# def edit_record_comment(incident_id):
-#     """ This route changes record comment of a single red flag."""
-#     return change_comment(incident_id)
+@app.route('/red-flags/<incident_id>/comment', methods=['PATCH'])
+def edit_record_comment(incident_id):
+    """ This route changes record comment of a single red flag."""
+    return incendent_controller.change_comment(incident_id)
 
 @app.route('/red-flags/<int:incident_id>', methods=["DELETE"])
 def delete_record(incident_id):

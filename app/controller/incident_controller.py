@@ -3,8 +3,10 @@ from flask import jsonify
 import json
 from flask import request, make_response
 from ..models.model_incident import IncidentModel
+from ..utilities.validation import Valid
 
 incident_obj = IncidentModel()
+valid = Valid()
 
 class IncidentController:
     def __init__(self):
@@ -14,7 +16,8 @@ class IncidentController:
         """ Method to create an incident."""
 
         incident = incident_obj.create_incident(args)
-        if not incident or incident is None:
+        validate = valid.check_item(incident)
+        if validate:
             return jsonify({
                 'message':'sorry! no incidents were found'
             }), 200
@@ -36,28 +39,22 @@ class IncidentController:
         """ This method fetches incident."""
 
         incidents = incident_obj.get_incidents()
-        if not incidents or len(incidents) < 1 or incidents is None:
+        # if not incidents or len(incidents) < 1 or incidents is None:
+        validate = valid.check_item(incidents)
+        if validate:
             return jsonify({
-                'message':'sorry! no incidents were found'
-            }), 200
+                'message':'sorry! no incidents were found'}), 200
         return jsonify({
             'message': 'success',
             'incidents': incidents
         }), 200
 
-    
-    # my_redflag = Incident(incident_id, created_on, created_by, record_type, location, status, comment)
-    # REDFLAGS.append(my_redflag.to_dict())
-    # return jsonify({
-    #     "msg": "start",
-    #     "data": my_redflag.to_dict()
-    # }), 201
-
     def get_incident(self, incident_id):
         """ Class method to fetch single incident by ID."""
 
         incident = incident_obj.get_incident(incident_id)
-        if not incident or incident is None:
+        validate = valid.check_item(incident)
+        if validate:
             return jsonify({
                 'message':'sorry! incident with Id not found'
             }), 200
@@ -67,35 +64,34 @@ class IncidentController:
         }), 200
     
 
-# def edit_location(incident_id):  
-#         """ Method to change a redflag location."""
-#         new_data = request.get_json()
-#         for redflag in REDFLAGS:
-#             if redflag.get("incident_id") == int(incident_id):
-#                 data = redflag
-#         if data:
-#             if not data['status'] == 'Draft':
-#                 return jsonify(
-#                     {"error": "Can only edit location when red flag status is Draft."})
-#             data['location'] = new_data['location']
-#             return jsonify(
-#                 {"msg": "Updated red-flag record's location."}), 200
-#         return jsonify({"error": "Can not change location of non existant redflag."})
+    def edit_location(self, incident_id):  
+        """ Method to change a redflag location."""
 
-# def change_comment(incident_id):   
-#         """ Method to change a redflag record comment."""
-#         new_data = request.get_json()
-#         for redflag in REDFLAGS:
-#             if redflag.get("incident_id") == int(incident_id):
-#                 data = redflag
-#         if data:
-#             if not data['status'] == 'Draft':
-#                 return jsonify(
-#                     {"error": "Can only edit comment when red flag status is Draft."})
-#             data['comment'] = new_data['comment']
-#             return jsonify(
-#                 {"msg": "Updated red-flag record's comment."}), 200
-#         return jsonify({"error": "Can not change comment of non existant redflag."})
+        #get data to update with
+        new_data = request.get_json()
+        # fetch item to be updated
+        incident = incident_obj.get_incident(incident_id)
+        if incident:
+            if not incident['status'] == 'Draft':
+                return jsonify(
+                    {"error": "Can only edit location when red flag status is Draft."}), 400
+            incident['location'] = new_data['location']
+            return jsonify(
+                {"msg": "Updated red-flag record's location."}), 200
+        return jsonify({"error": "Can not change location of non existant redflag."}), 400
+
+    def change_comment(self, incident_id):   
+        """ Method to change a redflag record comment."""
+        new_comment = request.get_json()
+        incident = incident_obj.get_incident(incident_id)
+        if incident:
+            if not incident['status'] == 'Draft':
+                return jsonify(
+                    {"error": "Can only edit comment when red flag status is Draft."}), 400
+            incident['comment'] = new_comment['comment']
+            return jsonify(
+                {"msg": "Updated red-flag record's comment."}), 200
+        return jsonify({"error": "Can not change comment of non existant redflag."}), 400
 
     def delete_incident(self, incident_id):
         """ This is a method to delete a red flag."""

@@ -9,6 +9,8 @@ incidents = [
         "created_by": 1,
         "created_on": "2018-11-29 10:04:38.919951",
         "incident_id": 1,
+        "image" : "image.jpg",
+        "video" : "video.mp4",
         "location": "waka",
         "record_type": "RedFlag",
         "status": "Draft"
@@ -19,6 +21,8 @@ incidents = [
         "created_on": "2018-11-29 10:10:02.086352",
         "incident_id": 2,
         "location": "yapp",
+        "image" : "image.jpg",
+        "video" : "video.mp4",
         "record_type": "RedFlag",
         "status": "Draft"
     }
@@ -40,6 +44,8 @@ class IncidentModel:
             created_by=args['created_by'],
             record_type='RedFlag',
             location=args['location'],
+            image = ["image"],
+            video = ["video"],
             status='Draft',
             comment=args['comment']
         )

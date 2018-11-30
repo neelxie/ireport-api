@@ -12,6 +12,8 @@ class TestStructure(unittest.TestCase):
             status="Draft",
             record_type="RedFlag",
             location="kanjokya",
+            image= "image.jpg",
+            video= "video.mp4",
             created_on="2018-11-29 09:04:38.919951",
             created_by=1,
         )
