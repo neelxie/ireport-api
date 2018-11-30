@@ -1,5 +1,5 @@
 .vscode
 coverage/*
-venv/*
+venv/
 __pycache__
 *.pyc

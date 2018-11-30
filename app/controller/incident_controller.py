@@ -85,7 +85,7 @@ class IncidentController:
         new_comment = request.get_json()
         incident = incident_obj.get_incident(incident_id)
         if incident:
-            if not incident['status'] == 'Draft':
+            if incident['status'] != 'Draft':
                 return jsonify(
                     {"error": "Can only edit comment when red flag status is Draft."}), 400
             incident['comment'] = new_comment['comment']

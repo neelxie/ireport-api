@@ -5,6 +5,7 @@ from .test_structures import TestStructure
 
 test_valid = Valid()
 
+b = 1
 
 class TestIncident(TestStructure):
     """ Test Class for all incidents endpoint"""
@@ -27,6 +28,9 @@ class TestIncident(TestStructure):
                               content_type='application/json')
         new_comment = {'comment': "Police Brutality"}
         self.test_redflag['comment'] = new_comment['comment']
+        # GET THE comment which you changed
+        # check that comment text is new_comment
+        
         self.assertEqual(self.test_redflag['comment'], new_comment['comment'])
         # self.assertEqual(resp.status_code, 200)
 
