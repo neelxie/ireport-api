@@ -19,3 +19,13 @@ class Valid:
         """ Method to validate string."""
         if not isinstance(name, str):
             return False
+
+    # def check_update(self, item):
+    #     """ Method to validate PATCH data."""
+    #     if not isinstance(item, dict) or #len(item) != 1:
+    #         if isinstance(item['location'], str)
+    #             jadgfqhj
+    #         if type(dict['comment']) is str:
+    #             kfgqjke
+    #         item.items()[1]
+    #         return False

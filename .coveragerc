@@ -1,5 +1,6 @@
 [report]
 omit = 
+      */venv/*
       */python?.?/*
       */__pycache__/
       *.py[cod]
@@ -8,4 +9,3 @@ omit =
       */.pytest_cache/*
       */simplejson/*
       */usr/lib/python3/dist-packages/*
-      coverage/*
