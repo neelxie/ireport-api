@@ -19,14 +19,14 @@ iReporter enables any/every citizen to bring any form of corruption to the notic
 
 # Features
 
-  | REQUESTS     | APP ROUTES                              | FUNCTION                         |
-  |--------------|----------------------------------------------------------------------------|
-  |  GET         | /api/v1/red-flags                       | Fetch all red-flags records.     |
-  |  GET         | /api/v1/red-flags/[red_flag_id]         | Fetch a specific red-flag by id. |
-  |  PATCH       | /api/v1/red-flags/[red_flag_id]/location| Edit location of red-flag.       |
-  |  PATCH       | /api/v1/red-flags/[red_flag_id]/comment | Edit comment of red-flag.        |
-  |  POST        | /api/v1/red-flags                       | Create a red-flag record.        |
-  |  POST        | /api/v1/users                           | ye                               |  
+  | REQUESTS | APP ROUTES | FUNCTION 
+  |----------|------------|---------
+  |  GET | /api/v1/red-flags | Fetch all red-flags records.
+  |  GET | /api/v1/red-flags/[red_flag_id] | Fetch a specific red-flag by id.
+  |  PATCH | /api/v1/red-flags/[red_flag_id]/location | Edit location of red-flag.
+  |  PATCH | /api/v1/red-flags/[red_flag_id]/comment | Edit comment of red-flag.
+  |  POST | /api/v1/red-flags | Create a red-flag record.
+  |  POST | /api/v1/users | ye  
 
 # Installation:
 
