@@ -1,68 +1,65 @@
 """ File contains model for red-flag."""
 
-import datetime
 
-# incidents list
-incidents = [
-    {
-        "comment": "silliness",
-        "created_by": 1,
-        "created_on": "2018-11-29 10:04:38.919951",
-        "incident_id": 1,
-        "image" : "image.jpg",
-        "video" : "video.mp4",
-        "location": "waka",
-        "record_type": "RedFlag",
-        "status": "Draft"
-    },
-    {
-        "comment": "goodness",
-        "created_by": 1,
-        "created_on": "2018-11-29 10:10:02.086352",
-        "incident_id": 2,
-        "location": "yapp",
-        "image" : "image.jpg",
-        "video" : "video.mp4",
-        "record_type": "RedFlag",
-        "status": "Draft"
-    }
-]
-
-
-class IncidentModel:
-    """ Incidents class."""
+class IncidentDB:
+    """ Incidents list class."""
 
     # Class constructor
     def __init__(self):
-        self.incidents = incidents
-
-    def create_incident(self, args):
-        """ class method to create a red flag incident."""
-        incident = dict(
-            incident_id=len(incidents) + 1,
-            created_on=str(datetime.datetime.now()),
-            created_by=args['created_by'],
-            record_type='RedFlag',
-            location=args['location'],
-            image = ["image"],
-            video = ["video"],
-            status='Draft',
-            comment=args['comment']
-        )
-
-        incidents.append(incident)
-
-        return incident
+        """ The IncidentDB constructor initializes a list."""
+        self.incidents = []
 
     def get_incidents(self):
-        """ This method of the class gets all incidents."""
-        return self.incidents
+        """ Class method to get all incidents in list."""
+        return self.get_incidents
 
-    def get_incident(self, incident_id):
+    def add_incident(self, incident):
+        """ Method to add incident to IncidentsDB list."""
+        return self.incidents.append(incident)
+
+    def get_one_incident(self, incident_id):
         """ Method to get an incident by ID."""
 
-        for incident in incidents:
-            if incident['incident_id'] == incident_id:
-                return incident
-
+        for my_incident in self.incidents:
+            if my_incident.incident.incident_id == incident_id:
+                return my_incident
         return None
+
+
+class Incident:
+    """ Base class for incidents."""
+
+    def __init__(self, incident_id, created_on, created_by, record_type, comment):
+        """ The Constructor for the incident class."""
+        self.incident_id = incident_id
+        self.created_on = created_on
+        self.created_by = created_by
+        self.record_type = record_type
+        self.comment = comment
+
+
+class RedFlag:
+    """ Red Flags Class"""
+
+    def __init__(self, incident, location, image, video, status):
+        """ The Red Flag class constructor."""
+
+        self.incident = incident
+        self.location = location
+        self.image = image
+        self.video = video
+        self.status = status
+
+    def to_json(self):
+        """ Method to change Red flag incident to json for views."""
+        return {
+            "incident_id": self.incident.incident_id,
+            "created_on": self.incident.created_on,
+            "created_by": self.incident.created_by,
+            "record_type": self.incident.record_type,
+            "comment": self.incident.comment,
+            "location": self.location,
+            "image": self.image,
+            "video": self.video,
+            "status": self.status
+        }
