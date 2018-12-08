@@ -1,5 +1,4 @@
 """ File to hold the incident class controller."""
-from datetime import datetime
 from flask import jsonify
 from flask import request
 from ..models.model_incident import RedFlag
@@ -32,28 +31,16 @@ class IncidentController:
         data = request.get_json()
 
         incident_id = len(self.my_list.incidents)+ 1
-        created_on = str(datetime.now())
         created_by = data.get('created_by')
-        record_type = "RedFlag"
         location = data.get('location')
         image = data.get("image")
         video = data.get("video")
-        status = "Draft"
         comment = data.get('comment')
 
         error = self.valid.check_incident(created_by, location, image, video, comment)
         # incident = self.incident_obj.create_incident(data)
         my_red_flag = RedFlag(
-            Incident(
-                incident_id,
-                created_on,
-                created_by,
-                record_type,
-                comment),
-            location,
-            image,
-            video,
-            status)
+            Incident(incident_id, created_by, comment), location, image, video)
         # Add redflag to list
         self.my_list.incidents.append(my_red_flag)
 

@@ -41,7 +41,7 @@ class UserModel:
 
         return user
 
-    def get_one_user(self, user_id):
+    def get_one_user(self):
         """ Method to fetch details of one user."""
         
         item = [user for user in users if user['user_id'] == user_id]

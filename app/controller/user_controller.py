@@ -42,7 +42,7 @@ class UserController:
             'users': users
         }), 200
 
-    def fetch_one_user(self, user_id):
+    def fetch_one_user(self):
         """ Class method to get single user by ID."""
         user = self.user_model.get_one_user(user_id)
         if not user:
