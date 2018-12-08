@@ -1,4 +1,5 @@
 """ File contains model for red-flag."""
+from datetime import datetime
 
 
 class IncidentDB:
@@ -29,34 +30,34 @@ class IncidentDB:
 class Incident:
     """ Base class for incidents."""
 
-    def __init__(self, incident_id, created_on, created_by, record_type, comment):
+    def __init__(self, incident_id, created_by, comment):
         """ The Constructor for the incident class."""
         self.incident_id = incident_id
-        self.created_on = created_on
         self.created_by = created_by
-        self.record_type = record_type
         self.comment = comment
 
 
 class RedFlag:
     """ Red Flags Class"""
 
-    def __init__(self, incident, location, image, video, status):
+    def __init__(self, incident, location, image, video):
         """ The Red Flag class constructor."""
 
         self.incident = incident
+        self.created_on = str(datetime.now())
+        self.record_type = "RedFlag"
         self.location = location
         self.image = image
         self.video = video
-        self.status = status
+        self.status = "Draft"
 
     def to_json(self):
         """ Method to change Red flag incident to json for views."""
         return {
             "incident_id": self.incident.incident_id,
-            "created_on": self.incident.created_on,
+            "created_on": self.created_on,
             "created_by": self.incident.created_by,
-            "record_type": self.incident.record_type,
+            "record_type": self.record_type,
             "comment": self.incident.comment,
             "location": self.location,
             "image": self.image,
