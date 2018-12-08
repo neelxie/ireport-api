@@ -23,14 +23,16 @@ iReporter enables any/every citizen to bring any form of corruption to the notic
   |----------|------------|---------
   |  GET | /api/v1/red-flags | Fetch all red-flags records.
   |  GET | /api/v1/red-flags/[red_flag_id] | Fetch a specific red-flag by id.
-  |  PATCH | /api/v1/red-flags/[red_flag_id]/location | Edit location of red-flag.
-  |  PATCH | /api/v1/red-flags/[red_flag_id]/comment | Edit comment of red-flag.
+  |  PATCH | /api/v1/red-flags/[red_flag_id]/location | Edit/Change location of red-flag.
+  |  PATCH | /api/v1/red-flags/[red_flag_id]/comment | Edit/Change comment of red-flag.
   |  POST | /api/v1/red-flags | Create a red-flag record.
-  |  POST | /api/v1/users | ye  
+  |  POST | /api/v1/auth/signup | Register for an account as a user.
+  |  POST | /api/v1/auth/login | Log into app account.
 
 # Installation:
 
-*  Clone git repo to local directory ``` https://github.com/neelxie/ireport-api.git ```
+*  Clone git repo to local directory 
+``` https://github.com/neelxie/ireport-api.git ```
 ``` cd ireport-api ```
 *  Create a virtual environment:
 ``` virtualenv venv ```
@@ -54,12 +56,12 @@ Inside the iReport-api folder.
 #Deployment
 
 *  This app has been deployed on Heroku at the url below:
-``` https://.herokuapp.com/api/v1/ ```
+``` https://ireporta.herokuapp.com/api/v1/ ```
 
 # Contribute
 
 *  Join me and let us create super amazing stuff together.
-``` https://github.com/neelxie/ ```
+``` https://github.com/neelxie/ireport-api/tree/develop ```
 
 # Credits
 
