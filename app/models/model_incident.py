@@ -1,5 +1,6 @@
 """ File contains model for red-flag."""
 from datetime import datetime
+from flask_jwt_extended import get_jwt_identity
 
 
 class IncidentDB:
@@ -30,10 +31,9 @@ class IncidentDB:
 class Incident:
     """ Base class for incidents."""
 
-    def __init__(self, incident_id, created_by, comment):
+    def __init__(self, incident_id, comment):
         """ The Constructor for the incident class."""
         self.incident_id = incident_id
-        self.created_by = created_by
         self.comment = comment
 
 
@@ -45,18 +45,21 @@ class RedFlag:
 
         self.incident = incident
         self.created_on = str(datetime.now())
-        self.record_type = "RedFlag"
+        self.record_type = "Red-Flag"
         self.location = location
         self.image = image
         self.video = video
         self.status = "Draft"
+        self.created_by = get_jwt_identity()
+        
 
     def to_json(self):
         """ Method to change Red flag incident to json for views."""
+        
         return {
             "incident_id": self.incident.incident_id,
             "created_on": self.created_on,
-            "created_by": self.incident.created_by,
+            "created_by": self.created_by,
             "record_type": self.record_type,
             "comment": self.incident.comment,
             "location": self.location,

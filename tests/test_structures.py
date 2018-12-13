@@ -1,5 +1,7 @@
 import unittest
+import json
 from flask import Flask
+from flask_jwt_extended import create_access_token, get_jwt_identity
 from app.views.app_views import app
 
 class TestStructure(unittest.TestCase):
@@ -26,8 +28,25 @@ class TestStructure(unittest.TestCase):
             phone_number = "0705828612",
             registered = "2018-11-29 10:10:02.086352",
             user_id = 1,
-            user_name = "haxor"
+            user_name = "haxor",
+            password = "123456"
         )
-        self.empty_list = []
+        # self.token = create_access_token(self.test_user['user_id'])
+        # self.header = {'Authorization': f'Bearer {self.token}'}
         self.all_redflags=[self.test_redflag, self.test_redflag]
         self.app_users=[self.test_user, self.test_user]
+
+    def sign_up(self):
+        create_ireporter = self.app.post("/api/v1/auth/signup", content_type='application/json', data=json.dumps(self.test_user))
+        self.assertEqual(create_ireporter.status_code, 201)
+        response = json.loads(create_ireporter.data.decode())
+        # self.assertEqual(response["success"][0], "sdjshd")
+
+    def user_login(self):
+        self.sign_up()
+        ireporter = self.app.post('/api/v1/auth/login', content_type='application/json', 
+            data=json.dumps({"user_name":"haxor", "password":"123456"}))
+        self.assertEqual(ireporter.status_code, 200)
+        # response = json.loads(ireporter.data)
+        # self.assertEqual(response['message'], 'You have successfully been logged in as haxor')
+        # self.user_access_token = response['access_token']
