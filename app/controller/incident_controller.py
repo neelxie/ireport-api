@@ -28,20 +28,24 @@ class IncidentController:
     def add_incident(self):
         """ Method to create an incident."""
 
-        data = request.get_json()
+        data = request.get_json() # get posted data
 
-        incident_id = len(self.my_list.incidents)+ 1
-        created_by = data.get('created_by')
+        incident_id = len(self.my_list.incidents)+ 1 # auto-increment incident_id
         location = data.get('location')
         image = data.get("image")
         video = data.get("video")
         comment = data.get('comment')
 
-        error = self.valid.check_incident(created_by, location, image, video, comment)
-        # incident = self.incident_obj.create_incident(data)
+        # Incase of an error return it
+        error = self.valid.check_incident(
+            self.valid.validate_attributes(
+                location, comment), self.valid.check_image_video(
+                    image, video))
+
         my_red_flag = RedFlag(
-            Incident(incident_id, created_by, comment), location, image, video)
-        # Add redflag to list
+            Incident(incident_id, comment), location, image, video)
+
+        # Add created redflag to list
         self.my_list.incidents.append(my_red_flag)
 
         if error:
@@ -172,15 +176,34 @@ class IncidentController:
             "status": 400
         }), 400
 
-    def error_route(self):
-        """ function for 404 error."""
-        data = [
-            {
-                'Issue': 'You have entered an unknown URL.',
-                'message': 'Please do contact Derrick Sekidde for more details on this.'
-            }
-        ]
+    def non_existant_resource(self):
+        """ function for 404 error."""  
         return jsonify({
             'status': 404,
-            'data': data
+            'data': [
+                {
+                    'Issue': "You have entered an unknown URL. NOTE all urls have a 'api/v1/' prefix.",
+                    'message': 'Please do contact Derrick Sekidde for more details on this.'
+                    }]
         }), 404
+
+    # def unauthorised(self):
+    #     """ Error method for unauthenticated requests."""
+    #     return jsonify({
+    #         "status": 401,
+    #         "error": "Please sign up at 'https://ireporta.herokuapp.com/api/v1/auth/signup' to access this resource."
+    #     }), 401
+
+    def not_allowed(self):
+        """ For wrong methods for resources."""
+        return jsonify({
+            "status": 405,
+            "error": "The used method is not allowed for this resource. Change method or contact Derrick Sekidde."
+        }), 405
+
+    # def server_error(self):
+    #     """ Error handler for internal server errors."""
+    #     return jsonify({
+    #         "status": 500,
+    #         "error": "This error is originating from Heroku and has NOTHING to do with this API. Contact Derrick Sekidde"
+    #     })
