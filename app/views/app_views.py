@@ -24,6 +24,7 @@ def home():
 def create_redflag():
     """ Route to create an incident. Specifically for now
         a red flag. """
+    
     return incendent_controller.add_incident()
 
 @app.route('/api/v1/red-flags', methods=['GET'])
