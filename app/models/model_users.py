@@ -1,6 +1,6 @@
 """ This is the Users' models file."""
 import datetime
-from ..utilities.validation import Valid
+from ..utility.validation import Valid
 
 valid = Valid()
 
@@ -64,6 +64,13 @@ class UserDB:
     def create_user(self, user):
         """ Method for adding a user."""
         return self.all_users.append(user)
+
+    def single_user(self, user_id):
+        """ Method to get an app user by ID."""
+        for me_as_user in self.all_users:
+            if me_as_user.user_id == user_id:
+                return me_as_user
+        return None
 
     def checking_user(self, user_name, email):
         """ Check whether username or email already exist in list."""

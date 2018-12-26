@@ -1,7 +1,7 @@
 """ File for test for the validation class."""
 
-from app.utilities.validation import Valid
-from app.utilities.validation import file_format
+from app.utility.validation import Valid
+from app.utility.validation import file_format
 from .test_structures import TestStructure
 
 test_valid = Valid()
@@ -104,4 +104,12 @@ class TestValidationClass(TestStructure):
 
     def test_validate_login(self):
         """ validating entered login credentials."""
-        self.assertEqual(test_valid.validate_login("fake", ""),"Username and Password have to be valid strings.")
+        self.assertEqual(
+            test_valid.validate_login(
+                "fake", ""),"Username and Password have to be valid strings.")
+
+    def test_token_strip(self):
+        """ Test stripped token."""
+        self.assertEqual(
+            test_valid.token_strip(
+                "Bearer eyiamthe.greatestcoder.ever"), "eyiamthe.greatestcoder.ever")

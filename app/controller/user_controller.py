@@ -1,8 +1,10 @@
 """File for the user controller."""
 from flask import jsonify
 from flask import request
-from flask_jwt_extended import create_access_token, get_jwt_identity
-from ..utilities.validation import Valid
+import datetime
+import jwt
+from ..utility.validation import Valid
+from ..utility.auth import my_secret_key
 from ..models.model_users import (
     Base, User, UserDB, Credential)
 
@@ -36,7 +38,7 @@ class UserController:
         error = self.validator.check_incident(
             self.validator.check_user_base(
                 first_name, last_name, other_name, user_name), self.validator.check_credential(
-                    phone_number, email, password, is_admin))
+                phone_number, email, password, is_admin))
 
         # if the username or email are already registered return error.
         exist = self.user_list.checking_user(user_name, email)
@@ -56,7 +58,11 @@ class UserController:
 
         self.user_list.create_user(user)
 
-        token = create_access_token(user_id)
+        token = jwt.encode(
+            {"user_id": user_id, "user_name": user_name, "is_admin": is_admin, 'exp': datetime.datetime.utcnow(
+        ) + datetime.timedelta(minutes=15)}, my_secret_key).decode('UTF-8')
+
+        payload = jwt.decode(token, my_secret_key)
 
         if error:
             return jsonify({
@@ -73,8 +79,9 @@ class UserController:
         return jsonify({
             "status": 201,
             'success':[{
-                'access_token': token,
-                'message': f'{user_name} successfully registered'
+                'token': token,
+                "payload": payload.get('user_id')
+                # 'message': f'{user_name} successfully registered'
             }]
         }), 201
 
@@ -106,11 +113,29 @@ class UserController:
                 "status": 403
             }), 403
 
-        token = create_access_token(user_name)
+        token = jwt.encode(
+            {"user_id": user_name, 'exp': datetime.datetime.utcnow(
+        ) + datetime.timedelta(minutes=15)}, my_secret_key).decode('UTF-8')
+
+        payload = jwt.decode(token, my_secret_key)
+
         return jsonify({
-            'message': 200,
-            'Single user': [{
-                'access_token': token,
+            'status': 200,
+            'user logged in': [{
+                'token': token,
                 'success': f'{user_name} successfully logged in.'
             }]
+        }), 200
+
+    def app_user(self, user_id):
+        """ Retrieve single app user."""
+        user = self.user_list.single_user(user_id)
+        if user is None:
+            return jsonify({
+                'status': 400,
+                'error': "No user with given ID."
+            }), 400
+        return jsonify({
+            'status':200,
+            'single user': [user.to_dict()]
         }), 200

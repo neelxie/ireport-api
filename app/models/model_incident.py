@@ -1,6 +1,6 @@
 """ File contains model for red-flag."""
 from datetime import datetime
-from flask_jwt_extended import get_jwt_identity
+from ..utility.auth import user_identity
 
 
 class IncidentDB:
@@ -21,11 +21,15 @@ class IncidentDB:
 
     def get_one_incident(self, incident_id):
         """ Method to get an incident by ID."""
-
         for my_incident in self.incidents:
             if my_incident.incident.incident_id == incident_id:
                 return my_incident
         return None
+    
+    def user_incidents(self, user_id):
+        """ fetch all incidents by a user."""
+        single_user_incidents = [incident for incident in self.incidents if incident.created_by == user_id]
+        return single_user_incidents
 
 
 class Incident:
@@ -50,7 +54,7 @@ class RedFlag:
         self.image = image
         self.video = video
         self.status = "Draft"
-        self.created_by = get_jwt_identity()
+        self.created_by = ((user_identity()).get('user_id'))
         
 
     def to_json(self):

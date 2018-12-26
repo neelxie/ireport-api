@@ -4,7 +4,7 @@ from flask import request
 from ..models.model_incident import RedFlag
 from ..models.model_incident import IncidentDB
 from ..models.model_incident import Incident
-from ..utilities.validation import Valid
+from ..utility.validation import Valid
 
 
 class IncidentController:
@@ -29,9 +29,10 @@ class IncidentController:
         """ Method to create an incident."""
 
         data = request.get_json() # get posted data
-
+        print(data)
+ 
         incident_id = len(self.my_list.incidents)+ 1 # auto-increment incident_id
-        location = data.get('location')
+        location = data['location']
         image = data.get("image")
         video = data.get("video")
         comment = data.get('comment')
@@ -56,7 +57,9 @@ class IncidentController:
 
         return jsonify({
             'status': 201,
-            "data": [{'Red Flag successfully created': my_red_flag.to_json()}]
+            "data": [{
+                "incident_id": incident_id,
+                "message": "Created red-flag record"}]
         }), 201
 
 
@@ -90,6 +93,18 @@ class IncidentController:
             'Single Red Flag':[incident.to_json()]
         }), 200
 
+    def fetch_user_incident(self, user_id):
+        """ retrieve single user redflags."""
+        my_list = self.my_list.user_incidents(user_id)
+        if not my_list:
+            return jsonify({
+                'status': 400,
+                'error': "No user with that ID"
+            }), 400
+        return jsonify({
+            'status': 200,
+            'user incidents': [incident.to_json() for incident in my_list]
+        }), 200
 
     def edit_location(self, incident_id):
         """ Method to change a redflag location."""
@@ -100,7 +115,7 @@ class IncidentController:
         incident = self.my_list.get_one_incident(incident_id)
         if not incident:
             return jsonify({
-                "error": "Can not change location of non existant redflag.",
+                "error": "Location of non existant redflag can not be changed.",
                 'status': 400
             }), 400
 
@@ -124,7 +139,9 @@ class IncidentController:
 
         return jsonify({
             "status": 200,
-            "data":[{"Success": "Updated red-flag record's location."}]
+            "Location Update":[{
+                "incident_id": incident_id,
+                "message": "Updated red-flag record's location."}]
             }), 200
 
     def change_comment(self, incident_id):
@@ -154,7 +171,10 @@ class IncidentController:
         incident.incident.comment = new_comment.get('comment')
         return jsonify(
             {
-                "data":[{"Success": "Updated red-flag record's comment."}],
+                "Comment Updated":[{
+                    "Success": "Updated red-flag record's comment.",
+                    "incident_id": incident_id
+                    }],
                 'status': 200
                 }), 200
 
@@ -167,7 +187,10 @@ class IncidentController:
             
             self.my_list.incidents.remove(incident)
             return jsonify({
-                "data":[{'Success':'red-flag record has been deleted.'}],
+                "incident deleted":[{
+                    'Success':'red-flag record has been deleted.',
+                    "incident_id": incident_id
+                    }],
                 "status": 200
                 }), 200
 
@@ -176,16 +199,6 @@ class IncidentController:
             "status": 400
         }), 400
 
-    def non_existant_resource(self):
-        """ function for 404 error."""  
-        return jsonify({
-            'status': 404,
-            'data': [
-                {
-                    'Issue': "You have entered an unknown URL. NOTE all urls have a 'api/v1/' prefix.",
-                    'message': 'Please do contact Derrick Sekidde for more details on this.'
-                    }]
-        }), 404
 
     # def unauthorised(self):
     #     """ Error method for unauthenticated requests."""
@@ -193,13 +206,6 @@ class IncidentController:
     #         "status": 401,
     #         "error": "Please sign up at 'https://ireporta.herokuapp.com/api/v1/auth/signup' to access this resource."
     #     }), 401
-
-    def not_allowed(self):
-        """ For wrong methods for resources."""
-        return jsonify({
-            "status": 405,
-            "error": "The used method is not allowed for this resource. Change method or contact Derrick Sekidde."
-        }), 405
 
     # def server_error(self):
     #     """ Error handler for internal server errors."""

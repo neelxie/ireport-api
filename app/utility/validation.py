@@ -15,6 +15,10 @@ def file_format(my_file):
 class Valid:
     """ Validation class for app."""
 
+    def token_strip(self, token):
+        """ Authentication helper function to strip the token."""
+        new_token = token.lstrip('Bearer').strip(' ')
+        return new_token
 
     def check_format(self, my_str):
         """ Funtion to check if file string s not space but valid."""
