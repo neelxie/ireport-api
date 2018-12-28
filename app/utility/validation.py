@@ -112,3 +112,9 @@ class Valid:
         """method to check if login details are valid."""
         if self.verify_string(user_name) is False or self.verify_string(password) is False:
             return "Username and Password have to be valid strings."
+
+    def validate_status(self, status):
+        """ method to check status."""
+        statuses = ['investigation', 'resolved', 'rejected']
+        if self.verify_string(status) is False or status not in statuses:
+            return 'Status has to be a string of either "investigation", "resolved", or "rejected".'

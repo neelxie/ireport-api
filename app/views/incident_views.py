@@ -1,5 +1,5 @@
 from flask import Blueprint
-from ..utility.auth import token_required, user_identity
+from ..utility.auth import token_required, admin_route
 from app.controller.incident_controller import IncidentController
 
 incedent_controller = IncidentController()
@@ -42,6 +42,13 @@ def new_location(incident_id):
 def edit_record_comment(incident_id):
     """ This route changes record comment of a single red flag."""
     return incedent_controller.change_comment(incident_id)
+
+@incident_bp.route('/red-flags/<int:incident_id>/status', methods=['PATCH'])
+@token_required
+@admin_route
+def change_status(incident_id):
+    """ This is an Admin only route to change record red flag status."""
+    return incedent_controller.change_status(incident_id)
 
 @incident_bp.route('/red-flags/<int:incident_id>', methods=["DELETE"])
 @token_required

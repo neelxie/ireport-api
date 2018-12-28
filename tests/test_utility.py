@@ -59,6 +59,11 @@ class TestValidationClass(TestStructure):
         self.assertTrue(file_format("crime.mp4"))
         self.assertTrue(file_format("crime.jpeg"))
 
+    def test_validate_status(self):
+        """ method to check if the status is valid."""
+        self.assertEqual(
+            test_valid.validate_status(55), 'Status has to be a string of either "investigation", "resolved", or "rejected".')
+
     def test_check_user_base(self):
         """ validation method check user base."""
         self.assertEqual(

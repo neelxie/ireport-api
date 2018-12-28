@@ -26,6 +26,10 @@ class IncidentDB:
                 return my_incident
         return None
     
+    def remove_incident(self, incident_id):
+        """ List method to delete incident."""
+        del self.incidents[incident_id - 1]
+    
     def user_incidents(self, user_id):
         """ fetch all incidents by a user."""
         single_user_incidents = [incident for incident in self.incidents if incident.created_by == user_id]

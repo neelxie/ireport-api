@@ -110,6 +110,15 @@ class IncidentController:
         """ Method to change a redflag location."""
         #get data to update with
         new_data = request.get_json()
+
+        #validate the new_data
+        location_error = self.valid.update_location(new_data.get('location'))
+
+        if location_error:
+            return jsonify({
+                "error": location_error,
+                "status": 400
+            })
         
         # fetch item to be updated
         incident = self.my_list.get_one_incident(incident_id)
@@ -126,15 +135,6 @@ class IncidentController:
                 'status': 400
                 }), 400
 
-        #validate the new_data
-        location_error = self.valid.update_location(new_data.get('location'))
-
-        if location_error:
-            return jsonify({
-                "error": location_error,
-                "status": 400
-            })
-
         incident.location = new_data.get('location')
 
         return jsonify({
@@ -148,6 +148,13 @@ class IncidentController:
         """ Method to change a redflag record comment."""
         new_comment = request.get_json()
 
+        error = self.valid.validate_comment_update(new_comment.get('comment'))
+        if error:
+            return jsonify({
+                "status": 400,
+                "error": error
+                }), 400
+
         incident = self.my_list.get_one_incident(incident_id)
         if not incident:
             return jsonify({
@@ -160,14 +167,7 @@ class IncidentController:
                 "error": "Can only edit comment when red flag status is Draft.",
                 'status': 400
                 }), 400
-
-        error = self.valid.validate_comment_update(new_comment.get('comment'))
-        if error:
-            return jsonify({
-                "status": 400,
-                "error": error
-                }), 400
-
+        
         incident.incident.comment = new_comment.get('comment')
         return jsonify(
             {
@@ -178,6 +178,37 @@ class IncidentController:
                 'status': 200
                 }), 200
 
+    def change_status(self, incident_id):
+        """ Method to change a record status by admin"""
+        new_status = request.get_json()
+
+        status = new_status.get("status")
+        wrong_status = self.valid.validate_status(status)
+
+        if wrong_status:
+            return jsonify({
+                "error": wrong_status,
+                'status': 400
+                }), 400
+
+        incident = self.my_list.get_one_incident(incident_id)
+        if not incident:
+            return jsonify({
+                "error": "Can not change status of an incident that doesnt exist.",
+                'status': 400
+            }), 400
+
+        incident.status = status
+        return jsonify(
+            {
+                "Status Changed":[{
+                    "Success": "Red flag record has been changed.",
+                    "incident_id": incident_id
+                    }],
+                'status': 200
+                }), 200
+
+
     def delete_incident(self, incident_id):
         """ This is a method to delete a red flag."""
 
@@ -185,7 +216,7 @@ class IncidentController:
         # get list of all items and delete from it
         if incident:
             
-            self.my_list.incidents.remove(incident)
+            self.my_list.remove_incident(incident_id)
             return jsonify({
                 "incident deleted":[{
                     'Success':'red-flag record has been deleted.',

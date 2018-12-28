@@ -13,7 +13,6 @@ def token_required(my_function):
     def decorate(*args, **kwargs):
 
         headers = request.headers.get('Authorization')
-        print(headers)
 
         if headers is None:
             return jsonify({
@@ -22,14 +21,15 @@ def token_required(my_function):
             }), 401
         token = token_valid.token_strip(headers)
 
-        print(token)
+        # print(token)
         data = jwt.decode(token, my_secret_key)
+        print(data)
 
-        if not data:
-            return jsonify({
-                'error': "Unauthorized! Invalid Token!",
-                "status": 401
-            }), 401
+        # if not data:
+        #     return jsonify({
+        #         'error': "Unauthorized! Invalid Token!",
+        #         "status": 401
+        #     }), 401
 
         return my_function(*args, **kwargs)
     return decorate
