@@ -1,5 +1,5 @@
 # ireport-api
-iReporter enables any/every citizen to bring any form of corruption to the notice of appropriate authorities and the general public. Users can also report on things that needs government intervention.
+iReporter enables any/every citizen to bring any form of corruption to the notice of appropriate authorities and the general public. Users can also report on things that need government intervention.
 
 [![Build Status](https://travis-ci.org/neelxie/ireport-api.svg?branch=develop)](https://travis-ci.org/neelxie/ireport-api)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/a439c5890cce4f94b3b50e53036c014e)](https://www.codacy.com/app/neelxie/ireport-api?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=neelxie/ireport-api&amp;utm_campaign=Badge_Grade)
@@ -59,7 +59,7 @@ Inside the iReport-api folder.
 *  Run this command in the project directory.
 ``` pytest ```
 
-#Deployment
+# Deployment
 
 *  This app has been deployed on Heroku at the url below:
 ``` https://ireporta.herokuapp.com/api/v1/ ```
