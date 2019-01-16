@@ -25,7 +25,7 @@ class Valid:
         return new_token
 
     def check_format(self, my_str):
-        """ Funtion to check if file string s not space but valid.
+        """ Funtion to check if file string has not space but valid.
         """
         is_valid = check_file_extension(my_str)
         if my_str.isspace() or len(my_str) < 5:
