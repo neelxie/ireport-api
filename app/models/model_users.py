@@ -2,14 +2,14 @@
 import datetime
 from ..utility.validation import Valid
 
-valid = Valid()
 
 class Base:
     """ This is the base class for a person and 
-        holds the person's names and phone number."""
-
+        holds the person's names and phone number.
+    """
     def __init__(self, first_name, last_name, other_name, phone_number):
-        """ Constructor for the base class."""
+        """ Constructor for the base class.
+        """
         self.first_name = first_name
         self.last_name = last_name
         self.other_name = other_name
@@ -17,21 +17,23 @@ class Base:
 
 
 class Credential:
-    """ Class to hold the necessary log in credentials."""
-
+    """ Class to hold the necessary log in credentials.
+    """
     def __init__(self, email, user_name, password):
-        """ Initializing the class will require the above attributes."""
+        """ Initializing the class will require the above attributes.
+        """
         self.email = email
         self.user_name = user_name
         self.password = password
 
 
 class User:
-    """ Class for comprehensive Users"""
-
+    """ Class for comprehensive Users.
+    """
     def __init__(self, base, credential, is_admin, user_id):
         """ Using composition, integrate base class, credential and 
-            other remaining attributes to make a complete User Class."""
+            other remaining attributes to make a complete User Class.
+        """
         self.base = base
         self.credential = credential
         self.is_admin = is_admin
@@ -39,8 +41,8 @@ class User:
         self.registered = str(datetime.datetime.now())
 
     def to_dict(self):
-        """ Method to change the user class to a JSON object for retrieval."""
-
+        """ Method to change the user class to a JSON object for retrieval.
+        """
         return {
             "first_name": self.base.first_name,
             "last_name": self.base.last_name,
@@ -56,24 +58,31 @@ class User:
 
 
 class UserDB:
-    """ App users will be stored in this class."""
+    """ App users will be stored in this class.
+    """
+    valid = Valid()
+
     def __init__(self):
-        """ app users will be held in a list called all_users."""
+        """ app users will be held in a list called all_users.
+        """
         self.all_users = []
         
     def create_user(self, user):
-        """ Method for adding a user."""
+        """ Method for adding a user.
+        """
         return self.all_users.append(user)
 
     def single_user(self, user_id):
-        """ Method to get an app user by ID."""
+        """ Method to get an app user by ID.
+        """
         for me_as_user in self.all_users:
             if me_as_user.user_id == user_id:
                 return me_as_user
         return None
 
     def checking_user(self, user_name, email):
-        """ Check whether username or email already exist in list."""
+        """ Check whether username or email already exist in list.
+        """
         temp = [user for user in self.all_users if user.credential.user_name == user_name]
         mail = [user for user in self.all_users if user.credential.email == email]
 
@@ -85,7 +94,7 @@ class UserDB:
             return None
     
     def validate_login(self, user_name, password):
-        error = valid.validate_login(user_name, password)
+        error = self.valid.validate_login(user_name, password)
 
         if error:
             return error
@@ -94,7 +103,9 @@ class UserDB:
         
         if len(temp) != 1:
             return "Username not found. Please sign up."
+
         if temp[0].credential.password != password:
             return "Wrong Password"
+            
         return None
 

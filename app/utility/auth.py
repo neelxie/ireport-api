@@ -19,7 +19,7 @@ def token_required(my_function):
                 'error': "Unauthorized! Token is missing.",
                 'status': 401
             }), 401
-        token = token_valid.token_strip(headers)
+        token = token_valid.strip_token_of_bearer(headers)
 
         # print(token)
         data = jwt.decode(token, my_secret_key)
@@ -36,7 +36,8 @@ def token_required(my_function):
 
 
 def user_identity():
-    """ doc string"""
+    """Get a user identity from token.
+    """
     auth = request.headers['Authorization']
     token = auth.lstrip('Bearer').strip(' ')
     return jwt.decode(token, my_secret_key)

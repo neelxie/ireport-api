@@ -17,11 +17,13 @@ class UserController:
 
 
     def __init__(self):
-        """ Class constructor for the User Controller."""
+        """ Class constructor for the User Controller.
+        """
         pass
 
     def register_user(self):
-        """ Controller logic for signup class method."""
+        """ Controller logic for signup class method.
+        """
         data = request.get_json()
 
         first_name = data.get("first_name")
@@ -35,7 +37,7 @@ class UserController:
         user_id = len(self.user_list.all_users)+ 1
 
         # check if user data is valid if not return an error.
-        error = self.validator.check_incident(
+        error = self.validator.check_if_either_function_is_not_none(
             self.validator.check_user_base(
                 first_name, last_name, other_name, user_name), self.validator.check_credential(
                 phone_number, email, password, is_admin))
@@ -60,7 +62,7 @@ class UserController:
 
         token = jwt.encode(
             {"user_id": user_id, "user_name": user_name, "is_admin": is_admin, 'exp': datetime.datetime.utcnow(
-        ) + datetime.timedelta(minutes=15)}, my_secret_key).decode('UTF-8')
+        ) + datetime.timedelta(minutes=20)}, my_secret_key).decode('UTF-8')
 
         payload = jwt.decode(token, my_secret_key)
 
@@ -85,21 +87,25 @@ class UserController:
             }]
         }), 201
 
-    def fetch_users(self):
-        """ Administrator method to retrieve all users."""
 
+    def fetch_users(self):
+        """ Administrator method to retrieve all users.
+        """
         if len(self.user_list.all_users) < 1:
             return jsonify({
                 "data":[{'message':'sorry! No App users yet.'}],
                 "status": 200
             }), 200
+
         return jsonify({
             'status': 200,
             'users': [user.to_dict() for user in self.user_list.all_users]
         }), 200
 
+
     def sign_in(self):
-        """ Class method to get single user by ID."""
+        """ Class method to get single user by ID.
+        """
         login =  request.get_json()
 
         user_name = login.get("user_name")
@@ -127,14 +133,17 @@ class UserController:
             }]
         }), 200
 
+
     def app_user(self, user_id):
-        """ Retrieve single app user."""
+        """ Retrieve single app user.
+        """
         user = self.user_list.single_user(user_id)
         if user is None:
             return jsonify({
                 'status': 400,
                 'error': "No user with given ID."
             }), 400
+
         return jsonify({
             'status':200,
             'single user': [user.to_dict()]

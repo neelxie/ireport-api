@@ -38,9 +38,9 @@ class IncidentController:
         comment = data.get('comment')
 
         # Incase of an error return it
-        error = self.valid.check_incident(
-            self.valid.validate_attributes(
-                location, comment), self.valid.check_image_video(
+        error = self.valid.check_if_either_function_is_not_none(
+            self.valid.validate_location_and_comment(
+                location, comment), self.valid.check_media_file_is_false(
                     image, video))
 
         my_red_flag = RedFlag(
@@ -94,7 +94,8 @@ class IncidentController:
         }), 200
 
     def fetch_user_incident(self, user_id):
-        """ retrieve single user redflags."""
+        """ retrieve single user redflags.
+        """
         my_list = self.my_list.user_incidents(user_id)
         if not my_list:
             return jsonify({
@@ -107,12 +108,13 @@ class IncidentController:
         }), 200
 
     def edit_location(self, incident_id):
-        """ Method to change a redflag location."""
+        """ Method to change a redflag location.
+        """
         #get data to update with
         new_data = request.get_json()
 
         #validate the new_data
-        location_error = self.valid.update_location(new_data.get('location'))
+        location_error = self.valid.validate_location_update(new_data.get('location'))
 
         if location_error:
             return jsonify({
@@ -145,7 +147,8 @@ class IncidentController:
             }), 200
 
     def change_comment(self, incident_id):
-        """ Method to change a redflag record comment."""
+        """ Method to change a redflag record comment.
+        """
         new_comment = request.get_json()
 
         error = self.valid.validate_comment_update(new_comment.get('comment'))
@@ -179,7 +182,8 @@ class IncidentController:
                 }), 200
 
     def change_status(self, incident_id):
-        """ Method to change a record status by admin"""
+        """ Method to change a record status by admin.
+        """
         new_status = request.get_json()
 
         status = new_status.get("status")
@@ -210,8 +214,8 @@ class IncidentController:
 
 
     def delete_incident(self, incident_id):
-        """ This is a method to delete a red flag."""
-
+        """ This is a method to delete a red flag.
+        """
         incident = self.my_list.get_one_incident(incident_id)
         # get list of all items and delete from it
         if incident:

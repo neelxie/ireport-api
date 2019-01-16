@@ -15,6 +15,7 @@ def create_app():
     @app.errorhandler(404)
     def page_not_found(e):
         """ Error handler route bad requests."""
+
         return jsonify({
             'status': 404,
             'data': [
@@ -27,6 +28,7 @@ def create_app():
     @app.errorhandler(405)
     def method_not_allowed(e):
         """ This is a route handler for wrong methods."""
+
         return jsonify({
             "status": 405,
             "error": "The used method is not allowed for this endpoint. Change method or contact Derrick Sekidde."
@@ -34,8 +36,6 @@ def create_app():
 
     return app
 
-# # app.config['JWT_SECRET_KEY'] = 'IAM-the-Greatest-Coder-Ever!'
-# app.config['JWT_SECRET_KEY'] = 'Zoe'
 
 # # @app.errorhandler(401)
 # # def unathorized(e):
