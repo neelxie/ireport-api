@@ -1,5 +1,4 @@
 """ File for test for the validation class."""
-
 from app.utility.validation import Valid
 from app.utility.validation import check_file_extension
 from .test_structures import TestStructure
@@ -10,14 +9,14 @@ test_valid = Valid()
 class TestValidationClass(TestStructure):
     """ Test Class for validation used in utility."""
 
-    def test_validate_check_if_either_function_is_not_none(self):
+    def test_validate_check_if_either_function_has_invalid(self):
         """ Test to validate check incident method."""
         self.assertEqual(
-            test_valid.check_if_either_function_is_not_none(1, 0), 1)
+            test_valid.check_if_either_function_has_invalid(1, 0), 1)
         self.assertEqual(
-            test_valid.check_if_either_function_is_not_none(0, 1), 1)
+            test_valid.check_if_either_function_has_invalid(0, 1), 1)
         self.assertEqual(
-            test_valid.check_if_either_function_is_not_none(0, 0), None)
+            test_valid.check_if_either_function_has_invalid(0, 0), None)
 
     def test_validate_location_and_comment(self):
         """ Test for the validation class method validate_location_and_comment."""
@@ -96,14 +95,14 @@ class TestValidationClass(TestStructure):
 
     def test_validate_media_file(self):
         """ Test for validation method valida mime
-            and the check_media_file_is_false method."""
+            and the check_media_file_is_valid method."""
         self.assertFalse(test_valid.validate_media_file(0))
         self.assertEqual(
-            test_valid.check_media_file_is_false(
+            test_valid.check_media_file_is_valid(
                 0, "video.mp4"),
             "Image has to be of jpg or jpeg format and a valid String.")
         self.assertEqual(
-            test_valid.check_media_file_is_false(
+            test_valid.check_media_file_is_valid(
                 "image.jpeg", 0),
             "Video has to be a valid String of either mov or mp4.")
 

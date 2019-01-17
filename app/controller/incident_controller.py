@@ -38,9 +38,13 @@ class IncidentController:
         comment = data.get('comment')
 
         # Incase of an error return it
-        error = self.valid.check_if_either_function_is_not_none(
+        incident_attributes = [location, image, video, comment]
+
+        my_error_list = self.valid.valdate_attributes(incident_attributes)
+
+        error = self.valid.check_if_either_function_has_invalid(
             self.valid.validate_location_and_comment(
-                location, comment), self.valid.check_media_file_is_false(
+                location, comment), self.valid.check_media_file_is_valid(
                     image, video))
 
         my_red_flag = RedFlag(
@@ -48,6 +52,13 @@ class IncidentController:
 
         # Add created redflag to list
         self.my_list.incidents.append(my_red_flag)
+
+        if my_error_list is not None:
+            return jsonify({
+                "status": 400,
+                "message": "You have not entered this/these attributes.",
+                "error": my_error_list
+            }), 400
 
         if error:
             return jsonify({

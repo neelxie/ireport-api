@@ -18,7 +18,7 @@ class Valid:
     # These are the only valid incident statuses
     VALID_STATUSES = ['investigation', 'resolved', 'rejected']
 
-    def  (self, token):
+    def  strip_token_of_bearer(self, token):
         """ Authentication helper function to strip the token.
         """
         new_token = token.lstrip('Bearer').strip(' ')
@@ -37,10 +37,10 @@ class Valid:
     def validate_media_file(self, media_file):
         """ Method to check media file.
         """
-        if not media_file or not isinstance(media_file, str) or self.check_format(media_file) is False:
+        if not isinstance(media_file, str) or self.check_format(media_file) is False:
             return False
 
-    def check_if_either_function_is_not_none(self, func1, func2):
+    def check_if_either_function_has_invalid(self, func1, func2):
         """This function takes in two functions and checks if neither is none.
         """
         error_one = func1
@@ -51,7 +51,7 @@ class Valid:
             return error_two
         return None
 
-    def check_media_file_is_false(self, image, video):
+    def check_media_file_is_valid(self, image, video):
         """ Validate images and video files.
         """
         if self.validate_media_file(image) is False:
@@ -64,10 +64,10 @@ class Valid:
     def validate_location_and_comment(self, location, comment):
         """ Method to validate comment and location.
         """
-        if not  location or not isinstance(location, float):
+        if not isinstance(location, float):
             return "Location has to be a valid float."
 
-        if not comment or not isinstance(comment, str) or len(comment) < 6:
+        if not isinstance(comment, str) or len(comment) < 6:
             return "Comment has to be a valid String."
 
 
@@ -133,3 +133,13 @@ class Valid:
         """
         if self.validate_string(status) is False or status not in self.VALID_STATUSES:
             return 'Status has to be a string of either "investigation", "resolved", or "rejected".'
+
+    def valdate_attributes(self, mylist):
+        """Method to validate list elements.
+        """
+        error_list = []
+        for attribute in mylist:
+            if attribute is None:
+                error_list.append(attribute)
+        if len(error_list) > 0:
+            return error_list

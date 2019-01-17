@@ -114,15 +114,6 @@ class TestIncident(TestStructure):
                                    content_type='application/json', headers=self.headers)
         self.assertEqual(response.status_code, 400)
 
-    # def test_add_redflag_error(self):
-    #     error_incident = self.app.post(
-    #         "/api/v1/red-flags", content_type='application/json',
-    #         headers=self.headers, data=json.dumps(self.test_error_redflag))
-    #     self.assertEqual(error_incident.status_code, 400)
-    #     self.assertEqual(
-    #         error_incident.data.decode(),
-    #         '{"error":"Location has to be a valid float.","status":400}\n')
-    #     # self.assertEqual(error_incident.get("status"), 201)
 
     def test_add_redflag(self):
         """ Add a red flag incident."""

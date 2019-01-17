@@ -36,8 +36,11 @@ class UserController:
         is_admin = data.get("is_admin")
         user_id = len(self.user_list.all_users)+ 1
 
+        user_attributes = [first_name, last_name, other_name, phone_number, email, user_name, password, is_admin]
+        user_attribute_error = self.validator.valdate_attributes(user_attributes)
+
         # check if user data is valid if not return an error.
-        error = self.validator.check_if_either_function_is_not_none(
+        error = self.validator.check_if_either_function_has_invalid(
             self.validator.check_user_base(
                 first_name, last_name, other_name, user_name), self.validator.check_credential(
                 phone_number, email, password, is_admin))
@@ -65,6 +68,12 @@ class UserController:
         ) + datetime.timedelta(minutes=20)}, my_secret_key).decode('UTF-8')
 
         payload = jwt.decode(token, my_secret_key)
+        if user_attribute_error is not None:
+            return jsonify({
+                "error": "You have not entered this/these user attributes.",
+                "missing attributes": user_attribute_error,
+                "status": 400,
+            }), 400
 
         if error:
             return jsonify({
