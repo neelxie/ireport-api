@@ -18,7 +18,7 @@ class Valid:
     # These are the only valid incident statuses
     VALID_STATUSES = ['investigation', 'resolved', 'rejected']
 
-    def strip_token_of_bearer(self, token):
+    def  (self, token):
         """ Authentication helper function to strip the token.
         """
         new_token = token.lstrip('Bearer').strip(' ')
