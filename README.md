@@ -1,5 +1,5 @@
 # ireport-api
-iReporter enables any/every citizen to bring any form of corruption to the notice of appropriate authorities and the general public. Users can also report on things that needs government intervention.
+iReporter enables any/every citizen to bring any form of corruption to the notice of appropriate authorities and the general public. Users can also report on things that need government intervention.
 
 [![Build Status](https://travis-ci.org/neelxie/ireport-api.svg?branch=develop)](https://travis-ci.org/neelxie/ireport-api)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/a439c5890cce4f94b3b50e53036c014e)](https://www.codacy.com/app/neelxie/ireport-api?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=neelxie/ireport-api&amp;utm_campaign=Badge_Grade)
@@ -19,15 +19,21 @@ iReporter enables any/every citizen to bring any form of corruption to the notic
 
 # Features
 
-  | REQUESTS | APP ROUTES | FUNCTION 
-  |----------|------------|---------
-  |  GET | /api/v1/red-flags | Fetch all red-flags records.
-  |  GET | /api/v1/red-flags/[red_flag_id] | Fetch a specific red-flag by id.
-  |  PATCH | /api/v1/red-flags/[red_flag_id]/location | Edit/Change location of red-flag.
-  |  PATCH | /api/v1/red-flags/[red_flag_id]/comment | Edit/Change comment of red-flag.
-  |  POST | /api/v1/red-flags | Create a red-flag record.
-  |  POST | /api/v1/auth/signup | Register for an account as a user.
-  |  POST | /api/v1/auth/login | Log into app account.
+  | REQUESTS | APP ROUTES | FUNCTION | ROLE 
+  |----------|------------|----------|-----
+  |  GET | /api/v1/ | Default/Home Page. | All
+  |  GET | /api/v1/red-flags | Fetch all red-flags records. | User 
+  |  GET | /api/v1/auth/users | Get all app users. | Admin
+  |  GET | /api/v1/auth/users/[user_id] | Get a single user details | Admin
+  |  GET | /api/v1/red-flags/[red_flag_id] | Fetch a specific red-flag by id. | User
+  |  GET | /api/v1/auth/users/[user_id]/red-flags | Fetch a specific red-flag by id. | User
+  |  PATCH | /api/v1/red-flags/[red_flag_id]/location | Edit/Change location of red-flag. | User
+  |  PATCH | /api/v1/red-flags/[red_flag_id]/comment | Edit/Change comment of red-flag. | User
+  |  PATCH | /api/v1/red-flags/[red_flag_id]/status | Change status of red-flag. | Admin
+  |  DELETE | /api/v1/red-flags/[red_flag_id] | Delete red-flag. | User
+  |  POST | /api/v1/red-flags | Create a red-flag record. | User
+  |  POST | /api/v1/auth/signup | Register for an account as a user. | All
+  |  POST | /api/v1/auth/login | Log into app account. | All
 
 # Installation:
 
@@ -53,7 +59,7 @@ Inside the iReport-api folder.
 *  Run this command in the project directory.
 ``` pytest ```
 
-#Deployment
+# Deployment
 
 *  This app has been deployed on Heroku at the url below:
 ``` https://ireporta.herokuapp.com/api/v1/ ```
