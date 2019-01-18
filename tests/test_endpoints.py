@@ -97,7 +97,7 @@ class TestIncident(TestStructure):
             '/api/v1/auth/users/9/red-flags',
             headers=self.headers)
         self.assertEqual(response.data.decode(),
-                         '{"error":"No user with that ID","status":400}\n')
+                         '{"error":"No user incidents yet.","status":400}\n')
 
     def test_delete_redflag_nonexistent(self):
         """ Test for fetchng an item while incdents list is empty."""

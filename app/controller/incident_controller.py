@@ -111,7 +111,7 @@ class IncidentController:
         if not my_list:
             return jsonify({
                 'status': 400,
-                'error': "No user with that ID"
+                'error': "No user incidents yet."
             }), 400
         return jsonify({
             'status': 200,
