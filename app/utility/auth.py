@@ -51,6 +51,6 @@ def admin_route(my_route):
             return jsonify({
                 'error': "Forbidden! This is an Admin ONLY route, and sadly you are not Admin.",
                 'status': 403
-                }), 403
+            }), 403
         return my_route(*args, **kwargs)
     return only_admin

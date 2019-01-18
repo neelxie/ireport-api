@@ -4,7 +4,6 @@ from .user_views import auth_bp
 from .incident_views import incident_bp
 
 
-
 # create app
 def create_app():
     app = Flask(__name__)
@@ -22,7 +21,7 @@ def create_app():
                 {
                     'Issue': "You have entered an unknown URL. NOTE all urls have a 'api/v1/' prefix.",
                     'message': 'Please do contact Derrick Sekidde for more details on this.'
-                    }]
+                }]
         }), 404
 
     @app.errorhandler(405)
@@ -35,17 +34,3 @@ def create_app():
         }), 405
 
     return app
-
-
-# # @app.errorhandler(401)
-# # def unathorized(e):
-# #     """ Handler for all unauthenticated requests."""
-# #     return incendent_controller.unauthorised()
-
-
-# @app.errorhandler(500)
-# def internal_server_error(e):
-#     """ Server error from Heroku."""
-#     return incendent_controller.server_error()
-
-    

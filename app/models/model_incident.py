@@ -7,6 +7,7 @@ class IncidentDB:
     """ Incidents list class.
     """
     # Class constructor
+
     def __init__(self):
         """ The IncidentDB constructor initializes a list.
         """
@@ -29,22 +30,24 @@ class IncidentDB:
             if my_incident.incident.incident_id == incident_id:
                 return my_incident
         return None
-    
+
     def remove_incident(self, incident_id):
         """ List method to delete incident.
         """
         del self.incidents[incident_id - 1]
-    
+
     def user_incidents(self, user_id):
         """ fetch all incidents by a user.
         """
-        single_user_incidents = [incident for incident in self.incidents if incident.created_by == user_id]
+        single_user_incidents = [
+            incident for incident in self.incidents if incident.created_by == user_id]
         return single_user_incidents
 
 
 class Incident:
     """ Base class for incidents.
     """
+
     def __init__(self, incident_id, comment):
         """ The Constructor for the incident class.
         """
@@ -66,7 +69,6 @@ class RedFlag:
         self.video = video
         self.status = "Draft"
         self.created_by = ((user_identity()).get('user_id'))
-        
 
     def to_json(self):
         """ Method to change Red flag incident to json for views.

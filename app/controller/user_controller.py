@@ -15,7 +15,6 @@ class UserController:
     user_list = UserDB()
     validator = Valid()
 
-
     def __init__(self):
         """ Class constructor for the User Controller.
         """
@@ -25,6 +24,7 @@ class UserController:
         """ Controller logic for signup class method.
         """
         data = request.get_json()
+        print(data)
 
         first_name = data.get("first_name")
         last_name = data.get("last_name")
@@ -34,10 +34,27 @@ class UserController:
         user_name = data.get("user_name")
         password = data.get("password")
         is_admin = data.get("is_admin")
-        user_id = len(self.user_list.all_users)+ 1
+        user_id = len(self.user_list.all_users) + 1
 
-        user_attributes = [first_name, last_name, other_name, phone_number, email, user_name, password, is_admin]
-        user_attribute_error = self.validator.valdate_attributes(user_attributes)
+        user_attributes = [
+            "first_name",
+            "last_name",
+            "other_name",
+            "phone_number",
+            "email",
+            "user_name",
+            "password",
+            "is_admin"]
+        user_attribute_error = self.validator.valdate_attributes(
+            data,
+            user_attributes)
+
+        if user_attribute_error is not None:
+            return jsonify({
+                "error": "You have not entered this/these user attributes.",
+                "missing attributes": user_attribute_error,
+                "status": 400,
+            }), 400
 
         # check if user data is valid if not return an error.
         error = self.validator.check_if_either_function_has_invalid(
@@ -47,6 +64,18 @@ class UserController:
 
         # if the username or email are already registered return error.
         exist = self.user_list.checking_user(user_name, email)
+
+        if exist is not None:
+            return jsonify({
+                "status": 401,
+                "error": exist
+            }), 401
+
+        if error:
+            return jsonify({
+                'error': error,
+                "status": 400
+            }), 400
 
         user = User(
             Base(
@@ -63,46 +92,29 @@ class UserController:
 
         self.user_list.create_user(user)
 
-        token = jwt.encode(
-            {"user_id": user_id, "user_name": user_name, "is_admin": is_admin, 'exp': datetime.datetime.utcnow(
-        ) + datetime.timedelta(minutes=20)}, my_secret_key).decode('UTF-8')
+        token = jwt.encode({"user_id": user_id,
+                            "user_name": user_name,
+                            "is_admin": is_admin,
+                            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=20)},
+                           my_secret_key).decode('UTF-8')
 
         payload = jwt.decode(token, my_secret_key)
-        if user_attribute_error is not None:
-            return jsonify({
-                "error": "You have not entered this/these user attributes.",
-                "missing attributes": user_attribute_error,
-                "status": 400,
-            }), 400
-
-        if error:
-            return jsonify({
-                'error': error,
-                "status": 400
-            }), 400
-
-        if exist is not None: 
-            return jsonify({
-                "status": 401,
-                "error": exist
-            }), 401
 
         return jsonify({
             "status": 201,
-            'success':[{
+            'success': [{
                 'token': token,
                 "payload": payload.get('user_id')
                 # 'message': f'{user_name} successfully registered'
             }]
         }), 201
 
-
     def fetch_users(self):
         """ Administrator method to retrieve all users.
         """
         if len(self.user_list.all_users) < 1:
             return jsonify({
-                "data":[{'message':'sorry! No App users yet.'}],
+                "data": [{'message': 'sorry! No App users yet.'}],
                 "status": 200
             }), 200
 
@@ -111,11 +123,10 @@ class UserController:
             'users': [user.to_dict() for user in self.user_list.all_users]
         }), 200
 
-
     def sign_in(self):
         """ Class method to get single user by ID.
         """
-        login =  request.get_json()
+        login = request.get_json()
 
         user_name = login.get("user_name")
         password = login.get("password")
@@ -124,13 +135,13 @@ class UserController:
 
         if error:
             return jsonify({
-                'message':error,
+                'message': error,
                 "status": 403
             }), 403
 
         token = jwt.encode(
             {"user_id": user_name, 'exp': datetime.datetime.utcnow(
-        ) + datetime.timedelta(minutes=15)}, my_secret_key).decode('UTF-8')
+            ) + datetime.timedelta(minutes=15)}, my_secret_key).decode('UTF-8')
 
         payload = jwt.decode(token, my_secret_key)
 
@@ -142,7 +153,6 @@ class UserController:
             }]
         }), 200
 
-
     def app_user(self, user_id):
         """ Retrieve single app user.
         """
@@ -150,10 +160,10 @@ class UserController:
         if user is None:
             return jsonify({
                 'status': 400,
-                'error': "No user with given ID."
+                'error': "No incidents for user yet."
             }), 400
 
         return jsonify({
-            'status':200,
+            'status': 200,
             'single user': [user.to_dict()]
         }), 200
