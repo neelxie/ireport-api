@@ -4,9 +4,10 @@ from ..utility.validation import Valid
 
 
 class Base:
-    """ This is the base class for a person and 
+    """ This is the base class for a person and
         holds the person's names and phone number.
     """
+
     def __init__(self, first_name, last_name, other_name, phone_number):
         """ Constructor for the base class.
         """
@@ -19,6 +20,7 @@ class Base:
 class Credential:
     """ Class to hold the necessary log in credentials.
     """
+
     def __init__(self, email, user_name, password):
         """ Initializing the class will require the above attributes.
         """
@@ -30,8 +32,9 @@ class Credential:
 class User:
     """ Class for comprehensive Users.
     """
+
     def __init__(self, base, credential, is_admin, user_id):
-        """ Using composition, integrate base class, credential and 
+        """ Using composition, integrate base class, credential and
             other remaining attributes to make a complete User Class.
         """
         self.base = base
@@ -66,7 +69,7 @@ class UserDB:
         """ app users will be held in a list called all_users.
         """
         self.all_users = []
-        
+
     def create_user(self, user):
         """ Method for adding a user.
         """
@@ -83,29 +86,30 @@ class UserDB:
     def checking_user(self, user_name, email):
         """ Check whether username or email already exist in list.
         """
-        temp = [user for user in self.all_users if user.credential.user_name == user_name]
+        temp = [
+            user for user in self.all_users if user.credential.user_name == user_name]
         mail = [user for user in self.all_users if user.credential.email == email]
 
-        if len(temp) > 1:
+        if len(temp) > 0:
             return "User name is already taken."
-        elif len(mail) > 1:
+        elif len(mail) > 0:
             return "Email already has an account."
         else:
             return None
-    
+
     def validate_login(self, user_name, password):
         error = self.valid.validate_login(user_name, password)
 
         if error:
             return error
 
-        temp = [user for user in self.all_users if user.credential.user_name == user_name]
-        
+        temp = [
+            user for user in self.all_users if user.credential.user_name == user_name]
+
         if len(temp) != 1:
             return "Username not found. Please sign up."
 
         if temp[0].credential.password != password:
             return "Wrong Password"
-            
-        return None
 
+        return None
