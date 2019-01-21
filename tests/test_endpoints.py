@@ -97,7 +97,7 @@ class TestIncident(TestStructure):
             '/api/v1/auth/users/9/red-flags',
             headers=self.headers)
         self.assertEqual(response.data.decode(),
-                         '{"error":"No user with that ID","status":400}\n')
+                         '{"error":"No user incidents yet.","status":400}\n')
 
     def test_delete_redflag_nonexistent(self):
         """ Test for fetchng an item while incdents list is empty."""
@@ -174,11 +174,3 @@ class TestIncident(TestStructure):
         delete_red_flag = json.loads(delete_red_flag.data.decode())
         self.assertEqual(delete_red_flag.get("status"), 200)
         self.assertIn("incident deleted", delete_red_flag)
-        # Test for checking errors in creating an incident.
-        # error_incident = self.app.post(
-        #     "/api/v1/red-flags", content_type='application/json',
-        #     headers=self.headers, data=json.dumps(self.test_error_redflag))
-        # self.assertEqual(error_incident.status_code, 400)
-        # self.assertEqual(
-        #     error_incident.data.decode(),
-        #     '{"error":"Location has to be a valid float.","status":400}\n')

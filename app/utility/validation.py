@@ -144,8 +144,5 @@ class Valid:
         if data is None or len(data) < 1:
             return "No data was entered or dict is empty."
         error_list = [attr for attr in mylist if data.get(attr) is None]
-        # for attribute in mylist:
-        #     if attribute is None:
-        #         error_list.append(mylist[attribute])
         if len(error_list) > 0:
             return error_list

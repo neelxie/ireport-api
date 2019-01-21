@@ -13,11 +13,11 @@ iReporter enables any/every citizen to bring any form of corruption to the notic
 *   Linting Framework - Pylint
 *   Style GuideLine - Autopep8
 
-# Application Demo 
+## Application Demo 
 
-*   UserInterface ``` https://neelxie.github.io/iReport/UI/ ```
+*   Check out the [User Interface](https://neelxie.github.io/iReport/UI/)
 
-# Features
+## Features
 
   | REQUESTS | APP ROUTES | FUNCTION | ROLE 
   |----------|------------|----------|-----
@@ -35,10 +35,9 @@ iReporter enables any/every citizen to bring any form of corruption to the notic
   |  POST | /api/v1/auth/signup | Register for an account as a user. | All
   |  POST | /api/v1/auth/login | Log into app account. | All
 
-# Installation:
+## Installation:
 
-*  Clone git repo to local directory 
-``` https://github.com/neelxie/ireport-api.git ```
+*  Clone [this](https://github.com/neelxie/ireport-api.git) git repo to local directory.
 ``` cd ireport-api ```
 *  Create a virtual environment:
 ``` virtualenv venv ```
@@ -49,33 +48,31 @@ iReporter enables any/every citizen to bring any form of corruption to the notic
 *  Do not forget to run this in the develop branch:
 ``` git checkout develop ```
 
-# Running the application:
+## Running the application:
 
 Inside the iReport-api folder.
 ``` python run.py ```
 
-# Running the tests:
+## Running the tests:
 
 *  Run this command in the project directory.
-``` pytest ```
+``` pytest --cov=.```
 
-# Deployment
+## Deployment
 
-*  This app has been deployed on Heroku at the url below:
-``` https://ireporta.herokuapp.com/api/v1/ ```
+*  This app has been deployed on Heroku at the url [here.](https://ireporta.herokuapp.com/api/v1/)
 
-# Contribute
+## Contribute
 
-*  Join me and let us create super amazing stuff together.
-``` https://github.com/neelxie/ireport-api/tree/develop ```
+*  Join me [here](https://github.com/neelxie/ireport-api/tree/develop) and let us create super amazing stuff together.
 
-# Credits
+## Credits
 
 *  I thank GOD, to whom everything plays out ALWAYS.
 *  I thank all LevelUp 35 team, facilitators and attendees
    for the help offered to better me.
 *  I would like to thank Andela for the opportunity to change the world.
 
-# Author
+## Author
 
 *  Sekidde Derrick
