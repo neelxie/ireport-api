@@ -117,7 +117,7 @@ class Valid:
         """ Method to validate user credentials.
         """
         # if not phn_num or not re.match(r"^[0-9]*$", phn_num):
-        if not phn_num or not isinstance(phn_num, int):
+        if not phn_num or len(phn_num) < 7 or isinstance(int(phn_num), int) is False:
             return "Phone number must be only digits and no white spaces."
 
         if not isinstance(email, str) or self.check_for_white_spaces(email) is False or not re.match(
