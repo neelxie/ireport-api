@@ -106,23 +106,12 @@ class TestIncident(TestStructure):
                                    content_type='application/json', headers=self.headers)
         self.assertEqual(response.status_code, 400)
 
-    # def test_add_redflag_error(self):
-    #     error_incident = self.app.post(
-    #         "/api/v1/red-flags", content_type='application/json',
-    #         headers=self.headers, data=json.dumps(self.test_error_redflag))
-    #     self.assertEqual(error_incident.status_code, 400)
-    #     self.assertEqual(
-    #         error_incident.data.decode(),
-    #         '{"error":"Location has to be a valid float.","status":400}\n')
-    #     # self.assertEqual(error_incident.get("status"), 201)
-
     def test_add_redflag(self):
         """ Add a red flag incident."""
         signee = self.sign_up()
         auth_post = self.app.post(
             "/api/v1/red-flags", content_type='application/json',
             data=json.dumps(self.test_redflag), headers=self.headers)
-        # self.assertEqual(auth_post.data.decode(), 201)
         # would have checked for data returned but its too long
         self.assertEqual(auth_post.status_code, 201) # value from within returned response
         # check if redflags list is not empty
@@ -173,25 +162,7 @@ class TestIncident(TestStructure):
         delete_red_flag = self.app.delete('/api/v1/red-flags/1',
             headers=self.headers)
         self.assertEqual(delete_red_flag.status_code, 200)
-        # delete_red_flag = json.loads(delete_red_flag.data.decode())
-        # self.assertEqual(delete_red_flag.status_code, 204)
-        # self.assertIn("incident deleted", delete_red_flag.data.decode())
-                # Test for checking errors in creating an incident.
-        # error_incident = self.app.post(
-        #     "/api/v1/red-flags", content_type='application/json',
-        #     headers=self.headers, data=json.dumps(self.test_error_redflag))
-        # self.assertEqual(error_incident.status_code, 400)
-        # self.assertEqual(
-        #     error_incident.data.decode(),
-        #     '{"error":"Location has to be a valid float.","status":400}\n')
-
-
-    # def test_incident_db_methods(self):
-    #     test_incidents = IncidentDB()
-    #     # (result = test_incidents.get_incidents())
-    #     # self.assertEqual(test_incidents.get_incidents(), test_incidents.incidents)
-    #     self.assertListEqual(test_incidents.get_incidents(), test_incidents.incidents)
-    #     self.assertEqual()
+        
 
     def test_retrieve_all_users(self):
         """ Test route for fetching all users."""
