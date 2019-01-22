@@ -67,7 +67,7 @@ class TestUser(TestStructure):
             data=json.dumps(
                 {
                     "user_name": "handn",
-                    "password": "123456"}))
+                    "password": "hhfhhfhf"}))
         self.assertEqual(
             sign_up_user_error.data.decode(),
             '{"message":"Username not found. Please sign up.","status":403}\n')
@@ -88,7 +88,7 @@ class TestUser(TestStructure):
                     "password": "12dfdf"}))
         self.assertEqual(
             sign_up_password.data.decode(),
-            '{"message":"Wrong Password","status":403}\n')
+            '{"message":"Username and Password have to be valid strings.","status":403}\n')
         sign_up_error = self.app.post(
             '/api/v1/auth/login',
             content_type='application/json',
