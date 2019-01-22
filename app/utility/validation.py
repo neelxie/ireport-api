@@ -24,6 +24,12 @@ class Valid:
         new_token = token.lstrip('Bearer').strip(' ')
         return new_token
 
+    def check_for_white_spaces(self, any_word):
+        """ Function to check for white space in string."""
+        return_value = any_word.find(' ')
+        if return_value is not -1:
+            return False
+
     def check_format(self, my_str):
         """ Funtion to check if file string has not space but valid.
         """
@@ -91,7 +97,7 @@ class Valid:
     def validate_string(self, my_string):
         """ Validation method for a valid string.
         """
-        if not isinstance(my_string, str) or my_string.isalpha() is False:
+        if not isinstance(my_string, str) or my_string.isalpha() is False or self.check_for_white_spaces(my_string) is False:
             return False
 
         if my_string.isspace() or len(my_string) > 15 or len(my_string) < 2:
@@ -114,7 +120,7 @@ class Valid:
         if not phn_num or not isinstance(phn_num, int):
             return "Phone number must be only digits and no white spaces."
 
-        if not isinstance(email, str) or not re.match(
+        if not isinstance(email, str) or self.check_for_white_spaces(email) is False or not re.match(
                 r"[^@.]+@[A-Za-z]+\.[a-z]+", email):
             return "Enter a valid email address."
 
