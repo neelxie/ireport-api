@@ -6,13 +6,15 @@ import jwt
 from ..utility.validation import Valid
 from ..utility.auth import my_secret_key
 from ..models.model_users import (
-    Base, User, UserDB, Credential)
+    Base, User, Credential)
+from ..db.ireporter_db import DatabaseConnection
+
+db = DatabaseConnection()
 
 
 class UserController:
     """ Class for user controller."""
 
-    user_list = UserDB()
     validator = Valid()
 
     def __init__(self):
@@ -24,7 +26,6 @@ class UserController:
         """ Controller logic for signup class method.
         """
         data = request.get_json()
-        print(data)
 
         first_name = data.get("first_name")
         last_name = data.get("last_name")
@@ -34,7 +35,7 @@ class UserController:
         user_name = data.get("user_name")
         password = data.get("password")
         is_admin = data.get("is_admin")
-        user_id = len(self.user_list.all_users) + 1
+        registered = str(datetime.datetime.now())
 
         user_attributes = [
             "first_name",
@@ -63,13 +64,24 @@ class UserController:
                 phone_number, email, password, is_admin))
 
         # if the username or email are already registered return error.
-        exist = self.user_list.checking_user(user_name, email)
+        username_exist = db.check_username(user_name)
+        email_exist = db.check_email(email)
 
-        if exist is not None:
-            return jsonify({
-                "status": 401,
-                "error": exist
-            }), 401
+        db.add_user(first_name, last_name, other_name, phone_number,email,user_name,password, is_admin, registered)
+
+        # after successfully adding the user
+        # fetch user bse i need to use the database assigned ID 
+        # to add it to the token from which i will get it to use it for 'created-BY'
+        user = db.check_username(user_name)
+        print(user)
+        fetched = user.get('user_id')
+        print(fetched)
+        token = jwt.encode(
+            { 'user_id': fetched, "user_name": user_name, "is_admin": is_admin, 'exp': datetime.datetime.utcnow(
+        ) + datetime.timedelta(minutes=15)}, my_secret_key).decode('UTF-8')
+
+        payload = jwt.decode(token, my_secret_key)
+        print(payload)
 
         if error:
             return jsonify({
@@ -77,34 +89,17 @@ class UserController:
                 "status": 400
             }), 400
 
-        user = User(
-            Base(
-                first_name,
-                last_name,
-                other_name,
-                phone_number),
-            Credential(
-                email,
-                user_name,
-                password),
-            is_admin,
-            user_id)
-
-        self.user_list.create_user(user)
-
-        token = jwt.encode({"user_id": user_id,
-                            "user_name": user_name,
-                            "is_admin": is_admin,
-                            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=20)},
-                           my_secret_key).decode('UTF-8')
-
-        payload = jwt.decode(token, my_secret_key)
+        if username_exist is not None or email_exist is not None: 
+            return jsonify({
+                "status": 401,
+                "error": "Either username or email are already in registered."
+            }), 401
 
         return jsonify({
             "status": 201,
-            'success': [{
+            'success':[{
                 'token': token,
-                "payload": payload.get('user_id')
+                "payload": payload.get('user_name')
                 # 'message': f'{user_name} successfully registered'
             }]
         }), 201
@@ -112,15 +107,15 @@ class UserController:
     def fetch_users(self):
         """ Administrator method to retrieve all users.
         """
-        if len(self.user_list.all_users) < 1:
+        all_users = db.get_users()
+        if len(all_users) < 1:
             return jsonify({
-                "data": [{'message': 'sorry! No App users yet.'}],
-                "status": 200
-            }), 200
-
+                "data":[{'message':'sorry! No App users yet.'}],
+                "status": 400
+            }), 400
         return jsonify({
             'status': 200,
-            'users': [user.to_dict() for user in self.user_list.all_users]
+            'users': [user for user in all_users]
         }), 200
 
     def sign_in(self):
@@ -131,20 +126,30 @@ class UserController:
         user_name = login.get("user_name")
         password = login.get("password")
 
-        error = self.user_list.validate_login(user_name, password)
+        error = self.validator.validate_login(user_name, password)
 
         if error:
             return jsonify({
                 'message': error,
-                "status": 403
-            }), 403
+                "status": 401
+            }), 401
 
+        user = db.login(password, user_name)
+
+        if user is None:
+            return jsonify({
+                'error': "The log in credentials you entered are wrong.",
+                'status': 401
+            }), 401
+
+        # token = "Derek"
+        print(user)
         token = jwt.encode(
-            {"user_id": user_name, 'exp': datetime.datetime.utcnow(
-            ) + datetime.timedelta(minutes=15)}, my_secret_key).decode('UTF-8')
+            {"user_id": user.get('user_id'), "user_name": user.get('user_name'), \
+            "is_admin": user.get('is_admin'), 'exp': datetime.datetime.utcnow(
+        ) + datetime.timedelta(minutes=15)}, my_secret_key).decode('UTF-8')
 
-        payload = jwt.decode(token, my_secret_key)
-
+        # payload = jwt.decode(token, my_secret_key)
         return jsonify({
             'status': 200,
             'user logged in': [{
@@ -156,7 +161,7 @@ class UserController:
     def app_user(self, user_id):
         """ Retrieve single app user.
         """
-        user = self.user_list.single_user(user_id)
+        user = db.get_user(user_id)
         if user is None:
             return jsonify({
                 'status': 400,
@@ -165,5 +170,5 @@ class UserController:
 
         return jsonify({
             'status': 200,
-            'single user': [user.to_dict()]
+            'single user': [user]
         }), 200
