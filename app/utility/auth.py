@@ -12,18 +12,29 @@ def token_required(my_function):
     @wraps(my_function)
     def decorate(*args, **kwargs):
 
-        headers = request.headers.get('Authorization')
+        try:
 
-        if headers is None:
+            headers = request.headers.get('Authorization')
+            
+            try:
+                token = token_valid.strip_token_of_bearer(headers)
+
+        # print(token)
+                data = jwt.decode(token, my_secret_key)
+                print(data)
+
+            except (jwt.InvalidTokenError, jwt.InvalidSignatureError, jwt.ExpiredSignatureError):
+                return jsonify({
+                'error': "Unauthorized! Invalid Token!",
+                "status": 401
+            }), 401
+
+
+        except KeyError:
             return jsonify({
                 'error': "Unauthorized! Token is missing.",
                 'status': 401
             }), 401
-        token = token_valid.strip_token_of_bearer(headers)
-
-        # print(token)
-        data = jwt.decode(token, my_secret_key)
-        print(data)
 
         # if not data:
         #     return jsonify({
