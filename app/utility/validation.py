@@ -24,6 +24,12 @@ class Valid:
         new_token = token.lstrip('Bearer').strip(' ')
         return new_token
 
+    def check_for_white_spaces(self, any_word):
+        """ Function to check for white space in string."""
+        return_value = any_word.find(' ')
+        if return_value is not -1:
+            return False
+
     def check_format(self, my_str):
         """ Funtion to check if file string has not space but valid.
         """
@@ -91,10 +97,10 @@ class Valid:
     def validate_string(self, my_string):
         """ Validation method for a valid string.
         """
-        if not my_string or not isinstance(my_string, str):
+        if not isinstance(my_string, str) or my_string.isalpha() is False or self.check_for_white_spaces(my_string) is False:
             return False
 
-        if my_string.isspace() or len(my_string) < 2:
+        if my_string.isspace() or len(my_string) > 15 or len(my_string) < 2:
             return False
 
     def check_user_base(self, first_str, sec_str, thrd_str, fth_str):
@@ -111,14 +117,14 @@ class Valid:
         """ Method to validate user credentials.
         """
         # if not phn_num or not re.match(r"^[0-9]*$", phn_num):
-        if not phn_num or not isinstance(phn_num, int):
+        if not phn_num or len(phn_num) < 7 or isinstance(int(phn_num), int) is False:
             return "Phone number must be only digits and no white spaces."
 
-        if self.validate_string(email)is False or not re.match(
+        if not isinstance(email, str) or self.check_for_white_spaces(email) is False or not re.match(
                 r"[^@.]+@[A-Za-z]+\.[a-z]+", email):
             return "Enter a valid email address."
 
-        if self.validate_string(pass_word) is False or len(pass_word) < 6:
+        if not isinstance(pass_word, str) or len(pass_word) < 6:
             return "Password has to be a string and longer than 6 characters."
 
         if not isinstance(ad_min, bool):
