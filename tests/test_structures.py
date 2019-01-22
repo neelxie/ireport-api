@@ -49,8 +49,8 @@ class TestStructure(unittest.TestCase):
             phone_number=828612,
             registered="2018-11-29 10:10:02.086352",
             user_id=1,
-            user_name="haxor",
-            password="123456"
+            user_name="hacker",
+            password="hdhhffjjf"
         )
         self.test_another_user = dict(
             email="derek@cia.gov",
@@ -106,6 +106,6 @@ class TestStructure(unittest.TestCase):
         signed_in = self.sign_up()
         ireporter = self.app.post('/api/v1/auth/login',
                                   content_type='application/json',
-                                  data=json.dumps({"user_name": "haxor",
-                                                   "password": "123456"}))
+                                  data=json.dumps({"user_name": "hacker",
+                                                   "password": "hdhhffjjf"}))
         return ireporter

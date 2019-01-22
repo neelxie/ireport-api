@@ -91,7 +91,7 @@ class Valid:
     def validate_string(self, my_string):
         """ Validation method for a valid string.
         """
-        if not isinstance(my_string, str) or not my_string.isalpha():
+        if not isinstance(my_string, str) or my_string.isalpha() is False:
             return False
 
         if my_string.isspace() or len(my_string) > 15 or len(my_string) < 2:
@@ -118,7 +118,7 @@ class Valid:
                 r"[^@.]+@[A-Za-z]+\.[a-z]+", email):
             return "Enter a valid email address."
 
-        if self.validate_string(pass_word) is False or len(pass_word) < 6:
+        if not isinstance(pass_word, str) or len(pass_word) < 6:
             return "Password has to be a string and longer than 6 characters."
 
         if not isinstance(ad_min, bool):
