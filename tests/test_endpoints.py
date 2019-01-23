@@ -181,6 +181,13 @@ class TestIncident(TestStructure):
             '/api/v1/interventions/1/location', data=json.dumps({'location': 23.0235}),
                 headers=self.headers, content_type='application/json')
         self.assertEqual(location_update.status_code, 200)
+        update_comment = self.app.patch(
+            '/api/v1/interventions/1/comment', data=json.dumps({'comment': "Police Brutality"}),
+            headers=self.headers, content_type='application/json')
+        self.assertEqual(update_comment.status_code, 200)
+        change_status = self.app.patch('/api/v1/interventions/1/status', data=json.dumps({'status': "resolved"}),
+            headers=self.headers, content_type='application/json')
+        self.assertEqual(change_status.status_code, 200)
         
 
     def test_retrieve_all_users(self):
