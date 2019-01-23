@@ -7,15 +7,9 @@ import os
 class DatabaseConnection:
     def __init__(self):
         
-        if os.getenv('DB_NAME') == "test_flask":
-            self.db_name = 'test_flask'
-        else:
-            self.db_name = 'flask_api'
-
-        pprint(self.db_name)
         try:
             self.connection = psycopg2.connect(
-                dbname=self.db_name, user='postgres', host='localhost', password='', port=5432)
+                dbname='db477j2n0q0ihp', user='fyxmotponvcsto', host='ec2-23-21-244-254.compute-1.amazonaws.com', password='98bc1223f021f8ddb379c187da094e41ef5fbcfd35ef80b35dec667bd0a9dc85', port=5432)
             self.connection.autocommit = True
             self.cursor = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
             print('Connected to the database successfully')

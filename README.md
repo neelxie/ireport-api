@@ -3,7 +3,7 @@ iReporter enables any/every citizen to bring any form of corruption to the notic
 
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/a439c5890cce4f94b3b50e53036c014e)](https://www.codacy.com/app/neelxie/ireport-api?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=neelxie/ireport-api&amp;utm_campaign=Badge_Grade)
-[![Coverage Status](https://coveralls.io/repos/github/neelxie/ireport-api/badge.svg?branch=develop)](https://coveralls.io/github/neelxie/ireport-api?branch=develop)
+[![Coverage Status](https://coveralls.io/repos/github/neelxie/ireport-api/badge.svg?branch=ft-deploy)](https://coveralls.io/github/neelxie/ireport-api?branch=ft-deploy)
 [![Maintainability](https://api.codeclimate.com/v1/badges/aee377f03ebc940278a0/maintainability)](https://codeclimate.com/github/neelxie/ireport-api/maintainability)
 
 <b> Site has been built with.</b>
