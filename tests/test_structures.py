@@ -23,7 +23,6 @@ class TestStructure(unittest.TestCase):
         self.test_redflag = dict(
             comment = "Tests for ireporter",
             status="Draft",
-            record_type="RedFlag",
             location=234.2,
             image= "image.jpg",
             video= "video.mp4",
