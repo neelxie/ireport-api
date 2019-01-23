@@ -34,43 +34,53 @@ class DatabaseConnection:
             password VARCHAR(50), \
             is_admin BOOLEAN NOT NULL, \
             user_id SERIAL PRIMARY KEY, \
-            registered VARCHAR(150) NOT NULL);"
+            registered TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP);"
         self.cursor.execute(create_table)
 
-        create_table = "CREATE TABLE IF NOT EXISTS incidents \
+        create_table = "CREATE TABLE IF NOT EXISTS redflags \
             (incident_id SERIAL UNIQUE PRIMARY KEY, \
-            created_on VARCHAR(50) NOT NULL, \
-            created_by integer REFERENCES users (user_id), \
-            record_type VARCHAR(10) NOT NULL, \
+            created_on TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP,\
+            created_by INTEGER REFERENCES users(user_id), \
+            record_type VARCHAR DEFAULT 'redflag', \
             comment VARCHAR(200) NOT NULL, \
             location NUMERIC, \
             image VARCHAR(50), \
             video VARCHAR(50), \
-            status VARCHAR(30));"
+            status VARCHAR DEFAULT 'Draft');"
+        self.cursor.execute(create_table)
+
+        create_table = "CREATE TABLE IF NOT EXISTS interventions \
+            (incident_id SERIAL UNIQUE PRIMARY KEY, \
+            created_on TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP, \
+            created_by INTEGER REFERENCES users (user_id), \
+            record_type VARCHAR DEFAULT 'intervention', \
+            comment VARCHAR(200) NOT NULL, \
+            location NUMERIC, \
+            image VARCHAR(50), \
+            video VARCHAR(50), \
+            status VARCHAR DEFAULT 'Draft');"
         self.cursor.execute(create_table)
 
     def add_user(self, first_name, last_name, other_name, phone_number,
-                 email, user_name, password, is_admin, registered):
+                 email, user_name, password, is_admin):
         query = f"INSERT INTO users ( first_name, last_name, other_name, \
-        phone_number, email, user_name, password, is_admin, registered)\
+        phone_number, email, user_name, password, is_admin)\
          VALUES ('{first_name}', '{last_name}', '{other_name}', '{phone_number}',\
-          '{email}', '{user_name}', '{password}', '{is_admin}', '{registered}');"
+          '{email}', '{user_name}', '{password}', '{is_admin}');"
         self.cursor.execute(query)
 
 
-    def add_incident(self, created_on, created_by, record_type,
-                     comment, location, image, video, status):
+    def add_incident(self, table_name, created_by,
+                     comment, location, image, video):
 
-        # lat, lon = location.split(',')
-        # location = (float(lat), float(lon))
-        query = f"INSERT INTO incidents (created_on, created_by, record_type, \
-        comment, location, image, video, status) VALUES ('{created_on}', \
-        '{created_by}', '{record_type}', '{comment}', {location}, '{image}', '{video}', '{status}');"
+        query = f"""INSERT INTO {table_name} (created_by, comment, location, \
+        image, video) VALUES ('{created_by}', '{comment}', \
+        {location}, '{image}', '{video}'); """
         self.cursor.execute(query)
     # cast(location as float)
 
-    def get_incidents(self):
-        query = "SELECT * FROM incidents;"
+    def get_incidents(self, table_name):
+        query = "SELECT * FROM {};".format(table_name)
         self.cursor.execute(query)
         redflags = self.cursor.fetchall()
         return redflags
@@ -81,8 +91,8 @@ class DatabaseConnection:
         users = self.cursor.fetchall()
         return users
 
-    def get_an_incident(self, incident_id):
-        query = "SELECT * FROM incidents WHERE incident_id= '{}';".format(incident_id)
+    def get_an_incident(self, table_name, incident_id):
+        query = "SELECT * FROM {} WHERE incident_id= '{}';".format(table_name, incident_id)
         self.cursor.execute(query)
         red_flag = self.cursor.fetchone()
         return red_flag
@@ -93,8 +103,8 @@ class DatabaseConnection:
         user = self.cursor.fetchone()
         return user
     
-    def get_user_incidents(self, created_by):
-        query = "SELECT * FROM incidents WHERE created_by = '{}';".format(created_by)
+    def get_user_incidents(self, table_name, created_by):
+        query = "SELECT * FROM {} WHERE created_by = '{}';".format(table_name, created_by)
         self.cursor.execute(query)
         user_incidents = self.cursor.fetchall()
         return user_incidents
@@ -118,24 +128,24 @@ class DatabaseConnection:
         pprint(user_exists)
         return user_exists
 
-    def update_status(self, status, incident_id):
-        query = "UPDATE incidents SET status = '{}' WHERE incident_id = '{}';".format(status, incident_id)
+    def update_status(self, table_name, status, incident_id):
+        query = "UPDATE {} SET status = '{}' WHERE incident_id = '{}';".format(table_name, status, incident_id)
         self.cursor.execute(query)
 
-    def update_comment(self, comment, incident_id):
-        query = "UPDATE incidents SET comment = '{}' WHERE incident_id = '{}';".format(comment, incident_id)
+    def update_comment(self, table_name, comment, incident_id):
+        query = "UPDATE {} SET comment = '{}' WHERE incident_id = '{}';".format(table_name, comment, incident_id)
         self.cursor.execute(query)
 
-    def update_location(self, location, incident_id):
-        query = "UPDATE incidents SET location = {} WHERE incident_id = '{}';".format(location, incident_id)
+    def update_location(self, table_name, location, incident_id):
+        query = "UPDATE {} SET location = {} WHERE incident_id = '{}';".format(table_name, location, incident_id)
         self.cursor.execute(query)
 
-    def delete_incident(self, incident_id):
-        query = "DELETE FROM incidents WHERE incident_id = '{}';".format(incident_id)
+    def delete_incident(self, table_name, incident_id):
+        query = "DELETE FROM {} WHERE incident_id = '{}';".format(table_name, incident_id)
         self.cursor.execute(query)
 
     def drop_tables(self):
-        query = "DROP TABLE incidents;DROP TABLE users;"
+        query = "DROP TABLE interventions;DROP TABLE redflags;DROP TABLE users;"
         self.cursor.execute(query)
         return "Tables-dropped"
 

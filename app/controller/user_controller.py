@@ -35,7 +35,6 @@ class UserController:
         user_name = data.get("user_name")
         password = data.get("password")
         is_admin = data.get("is_admin")
-        registered = str(datetime.datetime.now())
 
         user_attributes = [
             "first_name",
@@ -67,7 +66,7 @@ class UserController:
         username_exist = db.check_username(user_name)
         email_exist = db.check_email(email)
 
-        db.add_user(first_name, last_name, other_name, phone_number,email,user_name,password, is_admin, registered)
+        db.add_user(first_name, last_name, other_name, phone_number, email, user_name, password, is_admin)
 
         # after successfully adding the user
         # fetch user bse i need to use the database assigned ID 

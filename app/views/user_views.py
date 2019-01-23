@@ -2,9 +2,13 @@
 from flask import Blueprint
 from app.controller.user_controller import UserController
 from ..utility.auth import token_required, admin_route
-from .incident_views import incedent_controller
+from ..controller.incident_controller import IncidentController
+from .intervention_views import MY_TABLE
+from .redflag_views import TABLE_NAME
+
 
 my_user = UserController()
+incident_controller = IncidentController()
 
 auth_bp = Blueprint("auth_bp", __name__)
 
@@ -45,6 +49,15 @@ def fetch_user(user_id):
 @token_required
 @admin_route
 def user_redflags(user_id):
-    """ Method route to retrieve all incidents from a single user.
+    """ Method route to retrieve all redflags from a single user.
     """
-    return incedent_controller.fetch_user_incident(user_id)
+    return incident_controller.fetch_user_incident(TABLE_NAME, user_id)
+
+
+@auth_bp.route('/users/<int:user_id>/interventions', methods=['GET'])
+@token_required
+@admin_route
+def interventions_of_single_user(user_id):
+    """ Method route to retrieve all interventions created by a single user.
+    """
+    return incident_controller.fetch_user_incident(MY_TABLE, user_id)
