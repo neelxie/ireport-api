@@ -188,6 +188,9 @@ class TestIncident(TestStructure):
         change_status = self.app.patch('/api/v1/interventions/1/status', data=json.dumps({'status': "resolved"}),
             headers=self.headers, content_type='application/json')
         self.assertEqual(change_status.status_code, 200)
+        delete_intervention = self.app.delete('/api/v1/interventions/1',
+            headers=self.headers)
+        self.assertEqual(delete_intervention.status_code, 200)
         
 
     def test_retrieve_all_users(self):
