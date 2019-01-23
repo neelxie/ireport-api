@@ -240,13 +240,13 @@ class IncidentController:
             db.delete_incident(table_name, incident_id)
             return jsonify({
                 "incident deleted": [{
-                    'Success': 'red-flag record has been deleted.',
+                    'Success': 'incidentpi record has been deleted.',
                     "incident_id": incident_id
                 }],
                 "status": 200
             }), 200
 
         return jsonify({
-            "error": 'No red-flag by that ID in records.',
+            "error": 'No incident by that ID in records.',
             "status": 400
         }), 400
