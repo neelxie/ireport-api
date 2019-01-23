@@ -6,7 +6,7 @@ def warn(*args, **kwargs):
     pass
 import warnings
 warnings.warn = warn
-from flask_jwt import jwt
+import jwt
 from app.utility.auth import my_secret_key
 from app.views.app_views import create_app
 from app.db.ireporter_db import DatabaseConnection

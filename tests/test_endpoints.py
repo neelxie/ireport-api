@@ -174,6 +174,13 @@ class TestIncident(TestStructure):
         response = self.app.get('/api/v1/interventions',
             content_type='application/json', headers=self.headers)
         self.assertEqual(response.status_code, 200)
+        one_redflag = self.app.get('/api/v1/interventions/1',
+            content_type='application/json', headers=self.headers)
+        self.assertEqual(one_redflag.status_code, 200)
+        location_update = self.app.patch(
+            '/api/v1/interventions/1/location', data=json.dumps({'location': 23.0235}),
+                headers=self.headers, content_type='application/json')
+        self.assertEqual(location_update.status_code, 200)
         
 
     def test_retrieve_all_users(self):
