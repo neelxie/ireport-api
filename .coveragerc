@@ -9,5 +9,6 @@ omit =
       *views/app_views.py
       */.pytest_cache/*
       */simplejson/*
+      */app/models/*
       */usr/lib/python3/dist-packages/*
       *__init__.py

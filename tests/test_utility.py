@@ -82,15 +82,15 @@ class TestValidationClass(TestStructure):
             "Phone number must be only digits and no white spaces.")
         self.assertEqual(
             test_valid.check_credential(
-                45786, "asdgob", "sdsdsds", False),
+                "457862556", "asdgob", "sdsdsds", False),
             "Enter a valid email address.")
         self.assertEqual(
             test_valid.check_credential(
-                45786, "asd@hdd.gob", "sd", False),
+                "457862556", "asd@hdd.gob", "sd", False),
             "Password has to be a string and longer than 6 characters.")
         self.assertEqual(
             test_valid.check_credential(
-                45786, "asd@hdd.gob", "sdsdsds", "asasas"),
+                "457862556", "asd@hdd.gob", "sdsdsds", "asasas"),
             "is_admin muust be a boolean.")
 
     def test_validate_media_file(self):
