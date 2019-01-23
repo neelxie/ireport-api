@@ -30,7 +30,7 @@ class IncidentController:
             'status': 200
         }), 200
 
-    def add_incident(self):
+    def add_incident(self, table_name):
         """ Method to create an incident."""
 
         incident_request = request.get_json()  # get posted data
@@ -40,12 +40,9 @@ class IncidentController:
         image = incident_request.get("image")
         video = incident_request.get("video")
         comment = incident_request.get('comment')
-        created_on = str(datetime.now())
-        record_type = "Red-Flag"
-        status = "Draft"
         payload = user_identity()
         print(payload)
-        user_id = payload.get('user_id')
+        created_by = payload.get('user_id')
 
         # Incase of an error return it
         incident_attributes = ["location", "image", "video","comment"]
@@ -57,7 +54,7 @@ class IncidentController:
                 location, comment), self.valid.check_media_file_is_valid(
                     image, video))
 
-        db.add_incident(created_on, user_id, record_type, comment, location, image, video, status)
+        db.add_incident(table_name, created_by, comment, location, image, video)
 
         if my_error_list is not None:
             return jsonify({
@@ -79,10 +76,10 @@ class IncidentController:
                 "message": "Created red-flag record"}]
         }), 201
 
-    def get_incidents(self):
+    def get_incidents(self, table_name):
         """ This method fetches incident."""
 
-        all_incidents = db.get_incidents()
+        all_incidents = db.get_incidents(table_name)
         if len(all_incidents) < 1:
             return jsonify({
                 'data': [{'Message': 'sorry! Red Flags list is empty.'}],
@@ -94,10 +91,10 @@ class IncidentController:
             'data': [red_flag for red_flag in all_incidents]
         }), 200
 
-    def get_incident(self, incident_id):
+    def get_incident(self, table_name, incident_id):
         """ Class method to fetch single incident by ID."""
 
-        incident = db.get_an_incident(incident_id)
+        incident = db.get_an_incident(table_name, incident_id)
 
         if incident is None:
             return jsonify({
@@ -110,10 +107,10 @@ class IncidentController:
             'Single Red Flag': [incident]
         }), 200
 
-    def fetch_user_incident(self, user_id):
+    def fetch_user_incident(self, table_name, user_id):
         """ retrieve single user redflags.
         """
-        my_list = db.get_user_incidents(user_id)
+        my_list = db.get_user_incidents(table_name, user_id)
         if not my_list:
             return jsonify({
                 'status': 400,
@@ -124,7 +121,7 @@ class IncidentController:
             'user incidents': [incident for incident in my_list]
         }), 200
 
-    def edit_location(self, incident_id):
+    def edit_location(self, table_name, incident_id):
         """ Method to change a redflag location.
         """
         # get data to update with
@@ -141,7 +138,7 @@ class IncidentController:
             })
 
         # fetch item to be updated
-        incident = db.get_an_incident(incident_id)
+        incident = db.get_an_incident(table_name, incident_id)
         if not incident:
             return jsonify({
                 "error": "Location of non existant redflag can not be changed.",
@@ -156,7 +153,7 @@ class IncidentController:
             }), 400
 
         my_location = new_data.get('location')
-        db.update_location(my_location, incident_id)
+        db.update_location(table_name, my_location, incident_id)
 
         return jsonify({
             "status": 200,
@@ -165,7 +162,7 @@ class IncidentController:
                 "message": "Updated red-flag record's location."}]
         }), 200
 
-    def change_comment(self, incident_id):
+    def change_comment(self, table_name, incident_id):
         """ Method to change a redflag record comment.
         """
         new_comment = request.get_json()
@@ -177,7 +174,7 @@ class IncidentController:
                 "error": error
             }), 400
 
-        incident = db.get_an_incident(incident_id)
+        incident = db.get_an_incident(table_name, incident_id)
         if not incident:
             return jsonify({
                 "error": "Can not change comment of non existant redflag.",
@@ -191,7 +188,7 @@ class IncidentController:
             }), 400
 
         new_comment = new_comment.get('comment')
-        db.update_comment(new_comment, incident_id)
+        db.update_comment(table_name, new_comment, incident_id)
         return jsonify(
             {
                 "Comment Updated": [{
@@ -201,7 +198,7 @@ class IncidentController:
                 'status': 200
             }), 200
 
-    def change_status(self, incident_id):
+    def change_status(self, table_name, incident_id):
         """ Method to change a record status by admin.
         """
         new_status = request.get_json()
@@ -215,15 +212,15 @@ class IncidentController:
                 'status': 400
             }), 400
 
-        incident = db.get_an_incident(incident_id)
-        db.update_status(status, incident_id)
+        incident = db.get_an_incident(table_name, incident_id)
+        
         if not incident:
             return jsonify({
                 "error": "Can not change status of an incident that doesnt exist.",
                 'status': 400
             }), 400
 
-        db.update_status(status, incident_id)
+        db.update_status(table_name, status, incident_id)
         return jsonify(
             {
                 "Status Changed": [{
@@ -233,14 +230,14 @@ class IncidentController:
                 'status': 200
             }), 200
 
-    def delete_incident(self, incident_id):
+    def delete_incident(self, table_name, incident_id):
         """ This is a method to delete a red flag.
         """
-        incident = db.get_an_incident(incident_id)
+        incident = db.get_an_incident(table_name, incident_id)
         # get list of all items and delete from it
         if incident:
 
-            db.delete_incident(incident_id)
+            db.delete_incident(table_name, incident_id)
             return jsonify({
                 "incident deleted": [{
                     'Success': 'red-flag record has been deleted.',
