@@ -6,7 +6,7 @@ def warn(*args, **kwargs):
     pass
 import warnings
 warnings.warn = warn
-import jwt
+from flask_jwt import jwt
 from app.utility.auth import my_secret_key
 from app.views.app_views import create_app
 from app.db.ireporter_db import DatabaseConnection
@@ -23,7 +23,6 @@ class TestStructure(unittest.TestCase):
         self.test_redflag = dict(
             comment = "Tests for ireporter",
             status="Draft",
-            record_type="RedFlag",
             location=234.2,
             image= "image.jpg",
             video= "video.mp4",

@@ -162,6 +162,18 @@ class TestIncident(TestStructure):
         delete_red_flag = self.app.delete('/api/v1/red-flags/1',
             headers=self.headers)
         self.assertEqual(delete_red_flag.status_code, 200)
+
+    def test_post_intervention(self):
+        """ Posting an interventon incident."""
+        signee = self.sign_up()
+        auth_post = self.app.post(
+            "/api/v1/interventions", content_type='application/json',
+            data=json.dumps(self.test_redflag), headers=self.headers)
+        # would have checked for data returned but its too long
+        self.assertEqual(auth_post.status_code, 201)
+        response = self.app.get('/api/v1/interventions',
+            content_type='application/json', headers=self.headers)
+        self.assertEqual(response.status_code, 200)
         
 
     def test_retrieve_all_users(self):

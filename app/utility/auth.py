@@ -1,5 +1,5 @@
 from functools import wraps
-import jwt
+from flask_jwt import jwt
 from flask import request, jsonify
 from .validation import Valid
 
