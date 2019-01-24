@@ -8,9 +8,9 @@ from .redflag_views import redflag_bp
 def create_app():
     app = Flask(__name__)
 
-    app.register_blueprint(auth_bp, url_prefix='/api/v1/auth')
-    app.register_blueprint(intervention_bp, url_prefix='/api/v1')
-    app.register_blueprint(redflag_bp, url_prefix='/api/v1')
+    app.register_blueprint(auth_bp, url_prefix='/api/v2/auth')
+    app.register_blueprint(intervention_bp, url_prefix='/api/v2')
+    app.register_blueprint(redflag_bp, url_prefix='/api/v2')
 
     @app.errorhandler(404)
     def page_not_found(e):

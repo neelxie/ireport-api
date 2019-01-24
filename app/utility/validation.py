@@ -70,7 +70,7 @@ class Valid:
     def validate_location_and_comment(self, location, comment):
         """ Method to validate comment and location.
         """
-        if not isinstance(location, float):
+        if not isinstance(location, float) or location <= 0:
             return "Location has to be a valid float."
 
         if not isinstance(comment, str) or len(comment) < 6:
@@ -106,9 +106,12 @@ class Valid:
     def check_user_base(self, first_str, sec_str, thrd_str, fth_str):
         """ To validate the names for app user signing up.
         """
-        if self.validate_string(first_str) is False or self.validate_string(
-                sec_str) is False or self.validate_string(thrd_str) is False:
-            return "First/Last/Other Name all have to be strings of two letters or more."
+        if self.validate_string(first_str) is False:
+            return "Firstname should have only letters between 2 and 15 chaarcters."
+        if self.validate_string(sec_str) is False:
+            return "Last Name should have only letters between 2 and 15 chaarcters."
+        if self.validate_string(thrd_str) is False:
+            return "Other Name should have only letters between 2 and 15 chaarcters."
 
         if self.validate_string(fth_str) is False:
             return "User Name has to be a string."
@@ -124,8 +127,8 @@ class Valid:
                 r"[^@.]+@[A-Za-z]+\.[a-z]+", email):
             return "Enter a valid email address."
 
-        if not isinstance(pass_word, str) or len(pass_word) < 6:
-            return "Password has to be a string and longer than 6 characters."
+        if not isinstance(pass_word, str) or len(pass_word) < 6 or len(pass_word) > 15:
+            return "Password has have 6 to 15 characters."
 
         if not isinstance(ad_min, bool):
             return "is_admin muust be a boolean."
