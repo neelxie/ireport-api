@@ -50,43 +50,26 @@ class UserController:
             user_attributes)
 
         if user_attribute_error is not None:
-            return jsonify({
+            return jsonify({"status": 400,
                 "error": "You have not entered this/these user attributes.",
                 "missing attributes": user_attribute_error,
-                "status": 400,
-            }), 400
+                }), 400
 
         # check if user data is valid if not return an error.
         error = self.validator.check_if_either_function_has_invalid(
             self.validator.check_user_base(
                 first_name, last_name, other_name, user_name), self.validator.check_credential(
                 phone_number, email, password, is_admin))
-
-        # if the username or email are already registered return error.
-        username_exist = db.check_username(user_name)
-        email_exist = db.check_email(email)
-
-        db.add_user(first_name, last_name, other_name, phone_number, email, user_name, password, is_admin)
-
-        # after successfully adding the user
-        # fetch user bse i need to use the database assigned ID 
-        # to add it to the token from which i will get it to use it for 'created-BY'
-        user = db.check_username(user_name)
-        print(user)
-        fetched = user.get('user_id')
-        print(fetched)
-        token = jwt.encode(
-            { 'user_id': fetched, "user_name": user_name, "is_admin": is_admin, 'exp': datetime.datetime.utcnow(
-        ) + datetime.timedelta(minutes=15)}, my_secret_key).decode('UTF-8')
-
-        payload = jwt.decode(token, my_secret_key)
-        print(payload)
-
+        
         if error:
             return jsonify({
                 'error': error,
                 "status": 400
             }), 400
+
+        # if the username or email are already registered return error.
+        username_exist = db.check_username(user_name)
+        email_exist = db.check_email(email)
 
         if username_exist is not None or email_exist is not None: 
             return jsonify({
@@ -94,11 +77,24 @@ class UserController:
                 "error": "Either username or email are already in registered."
             }), 401
 
+        user = db.add_user(first_name, last_name, other_name, phone_number, email, user_name, password, is_admin)
+
+        # after successfully adding the user
+        # fetch user bse i need to use the database assigned ID 
+        # to add it to the token from which i will get it to use it for 'created-BY'
+        user = db.check_username(user_name)
+        user_id = user.get('user_id')
+        token = jwt.encode(
+            { 'user_id': user_id, "user_name": user_name, "is_admin": is_admin, 'exp': datetime.datetime.utcnow(
+        ) + datetime.timedelta(minutes=60)}, my_secret_key).decode('UTF-8')
+
+        payload = jwt.decode(token, my_secret_key)
+
         return jsonify({
             "status": 201,
             'success':[{
                 'token': token,
-                "payload": payload.get('user_name')
+                "user": user
                 # 'message': f'{user_name} successfully registered'
             }]
         }), 201
@@ -112,10 +108,9 @@ class UserController:
                 "data":[{'message':'sorry! No App users yet.'}],
                 "status": 400
             }), 400
-        return jsonify({
-            'status': 200,
+        return jsonify({'status': 200,
             'users': [user for user in all_users]
-        }), 200
+            }), 200
 
     def sign_in(self):
         """ Class method to get single user by ID.
@@ -133,27 +128,25 @@ class UserController:
                 "status": 401
             }), 401
 
-        user = db.login(password, user_name)
+        user_true = db.login(password, user_name)
 
-        if user is None:
-            return jsonify({
-                'error': "The log in credentials you entered are wrong.",
-                'status': 401
+        if user_true is None:
+            return jsonify({'status': 401,
+                'error': "The log in credentials you entered are wrong."
             }), 401
 
-        # token = "Derek"
-        print(user)
+        user = db.check_username(user_name)
         token = jwt.encode(
             {"user_id": user.get('user_id'), "user_name": user.get('user_name'), \
             "is_admin": user.get('is_admin'), 'exp': datetime.datetime.utcnow(
-        ) + datetime.timedelta(minutes=15)}, my_secret_key).decode('UTF-8')
+        ) + datetime.timedelta(minutes=60)}, my_secret_key).decode('UTF-8')
 
         # payload = jwt.decode(token, my_secret_key)
         return jsonify({
             'status': 200,
             'user logged in': [{
                 'token': token,
-                'success': f'{user_name} successfully logged in.'
+                'user': user
             }]
         }), 200
 
@@ -164,7 +157,7 @@ class UserController:
         if user is None:
             return jsonify({
                 'status': 400,
-                'error': "No incidents for user yet."
+                'error': "No user by that ID."
             }), 400
 
         return jsonify({

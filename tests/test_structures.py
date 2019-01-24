@@ -23,7 +23,7 @@ class TestStructure(unittest.TestCase):
         self.test_redflag = dict(
             comment = "Tests for ireporter",
             status="Draft",
-            location=234.2,
+            location="12.22+2.142",
             image= "image.jpg",
             video= "video.mp4",
             created_on="2018-11-29 09:04:38.919951",
@@ -85,12 +85,12 @@ class TestStructure(unittest.TestCase):
 
     def sign_up(self):
         create_ireporter = self.app.post(
-            "/api/v1/auth/signup", content_type='application/json', data=json.dumps(self.test_user))
+            "/api/v2/auth/signup", content_type='application/json', data=json.dumps(self.test_user))
         return create_ireporter
 
     def user_login(self):
         signed_in = self.sign_up()
-        ireporter = self.app.post('/api/v1/auth/login', content_type='application/json', 
+        ireporter = self.app.post('/api/v2/auth/login', content_type='application/json', 
             data=json.dumps({"user_name":"hacker", "password":"asdfghj"}))
         return ireporter
 

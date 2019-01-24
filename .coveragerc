@@ -10,5 +10,6 @@ omit =
       */.pytest_cache/*
       */simplejson/*
       */app/models/*
+      */tests/*
       */usr/lib/python3/dist-packages/*
       *__init__.py
