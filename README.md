@@ -7,9 +7,9 @@ iReporter enables any/every citizen to bring any form of corruption to the notic
 [![Maintainability](https://api.codeclimate.com/v2/badges/aee377f03ebc940278a0/maintainability)](https://codeclimate.com/github/neelxie/ireport-api/maintainability)
 
 <b> Site has been built with.</b>
-*   Language - Python
-*   Database - Postgresql
-*   Serverside Framework - Flask
+*   Language - [Python](https://www.python.org/)
+*   Database - [Postgresql](https://www.postgresql.org/)
+*   Serverside Framework - [Flask](http://flask.pocoo.org/)
 *   Testing Framework - Pytest
 *   Linting Framework - Pylint
 *   Style GuideLine - Autopep8

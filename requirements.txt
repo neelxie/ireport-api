@@ -24,6 +24,7 @@ Flask==1.0.2
 Flask-JWT-Extended==3.16.0
 Flask-Mail==0.9.1
 Flask-Sendmail==0.1
+flask-swagger-ui==3.18.0
 funcsigs==1.0.2
 gunicorn==19.9.0
 idna==2.7
