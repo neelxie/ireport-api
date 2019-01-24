@@ -1,12 +1,16 @@
+""" Database file."""
+from pprint import pprint
 import psycopg2
 import psycopg2.extras
-from pprint import pprint
 import simplejson as json
 import os
 
 class DatabaseConnection:
+    """
+    Database class
+    """
     def __init__(self):
-        
+
         if os.getenv('DB_NAME') == "test_flask":
             self.db_name = 'test_flask'
         else:
@@ -25,13 +29,13 @@ class DatabaseConnection:
 
     def create_db_tables(self):
         create_table = "CREATE TABLE IF NOT EXISTS users \
-            ( first_name VARCHAR(50) NOT NULL, \
-            last_name VARCHAR(50) NOT NULL, \
-            other_name VARCHAR(50), \
-            phone_number VARCHAR(50), \
-            email VARCHAR(50), \
-            user_name VARCHAR(50), \
-            password VARCHAR(50), \
+            ( first_name VARCHAR(15) NOT NULL, \
+            last_name VARCHAR(15) NOT NULL, \
+            other_name VARCHAR(15), \
+            phone_number VARCHAR(15), \
+            email VARCHAR(20), \
+            user_name VARCHAR(15), \
+            password VARCHAR(20), \
             is_admin BOOLEAN NOT NULL, \
             user_id SERIAL PRIMARY KEY, \
             registered TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP);"
@@ -43,9 +47,9 @@ class DatabaseConnection:
             created_by INTEGER REFERENCES users(user_id), \
             record_type VARCHAR DEFAULT 'redflag', \
             comment VARCHAR(200) NOT NULL, \
-            location NUMERIC, \
-            image VARCHAR(50), \
-            video VARCHAR(50), \
+            location VARCHAR, \
+            image VARCHAR(15), \
+            video VARCHAR(15), \
             status VARCHAR DEFAULT 'Draft');"
         self.cursor.execute(create_table)
 
@@ -55,9 +59,9 @@ class DatabaseConnection:
             created_by INTEGER REFERENCES users (user_id), \
             record_type VARCHAR DEFAULT 'intervention', \
             comment VARCHAR(200) NOT NULL, \
-            location NUMERIC, \
-            image VARCHAR(50), \
-            video VARCHAR(50), \
+            location VARCHAR, \
+            image VARCHAR(15), \
+            video VARCHAR(15), \
             status VARCHAR DEFAULT 'Draft');"
         self.cursor.execute(create_table)
 
@@ -66,7 +70,7 @@ class DatabaseConnection:
         query = f"INSERT INTO users ( first_name, last_name, other_name, \
         phone_number, email, user_name, password, is_admin)\
          VALUES ('{first_name}', '{last_name}', '{other_name}', '{phone_number}',\
-          '{email}', '{user_name}', '{password}', '{is_admin}');"
+          '{email}', '{user_name}', '{password}', '{is_admin}')RETURNING *; "
         self.cursor.execute(query)
 
 
@@ -75,9 +79,10 @@ class DatabaseConnection:
 
         query = f"""INSERT INTO {table_name} (created_by, comment, location, \
         image, video) VALUES ('{created_by}', '{comment}', \
-        {location}, '{image}', '{video}'); """
+        '{location}', '{image}', '{video}')RETURNING incident_id; """
         self.cursor.execute(query)
-    # cast(location as float)
+        fetched = self.cursor.fetchone()
+        return fetched
 
     def get_incidents(self, table_name):
         query = "SELECT * FROM {};".format(table_name)
@@ -125,7 +130,6 @@ class DatabaseConnection:
         query = "SELECT user_name, password FROM users WHERE user_name='{}' and password='{}';".format(user_name, password)
         self.cursor.execute(query)
         user_exists = self.cursor.fetchone()
-        pprint(user_exists)
         return user_exists
 
     def update_status(self, table_name, status, incident_id):

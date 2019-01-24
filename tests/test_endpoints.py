@@ -29,7 +29,7 @@ class TestIncident(TestStructure):
         print(empty_list)
         self.assertEqual(
             empty_list.data.decode(),
-            '{"data":[{"Message":"sorry! Red Flags list is empty."}],"status":200}\n')
+            '{"data":[{"Message":"sorry! Incidents list is empty."}],"status":200}\n')
 
     def test_update_nonexistant_comment(self):
         """ Test method to edit red flag comment."""
@@ -47,7 +47,7 @@ class TestIncident(TestStructure):
         self.assertEqual(resp.status_code, 400)
         self.assertEqual(
             resp.data.decode(),
-            '{"error":"Can not change comment of non existant redflag.","status":400}\n')
+            '{"error":"Can not change comment of non existant incident.","status":400}\n')
 
     def test_update_location(self):
         """ Test method to change red flag location."""
@@ -56,13 +56,13 @@ class TestIncident(TestStructure):
                               content_type='application/json' , headers=self.headers)
         self.assertEqual(
             location_error.data.decode(),
-            '{"error":"New location has to be a float.","status":400}\n')
+            '{"error":"Location requires a + to separate latitude and longitudes","status":400}\n')
         resp = self.app.patch(
-            '/api/v2/red-flags/1/location', data=json.dumps({'location': 23.012}),
+            '/api/v2/red-flags/1/location', data=json.dumps({'location': "12.12+2.782"}),
                               content_type='application/json' , headers=self.headers)
         self.assertEqual(
             resp.data.decode(),
-            '{"error":"Location of non existant redflag can not be changed.","status":400}\n')
+            '{"error":"Location of non existant incdent can not be changed.","status":400}\n')
 
     def test_change_status(self):
         """ Test method to validate status before update."""
@@ -92,7 +92,7 @@ class TestIncident(TestStructure):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
             response.data.decode(),
-            '{"error":"No Red Flag with that ID was found.","status":400}\n')
+            '{"error":"No incident with that ID was found.","status":400}\n')
 
     def test_fetch_nonexistant_user_incidents(self):
         """ Test retrieving of user incidents when user is non existant."""
@@ -124,13 +124,13 @@ class TestIncident(TestStructure):
         self.assertEqual(one_redflag.status_code, 200)
         one_redflag = json.loads(one_redflag.data.decode())
         self.assertEqual(one_redflag.get("status"), 200)
-        self.assertIn("Single Red Flag", one_redflag)
+        self.assertIn("Single incdent", one_redflag)
         user_redflags = self.app.get('/api/v2/auth/users/1/red-flags',
             content_type='application/json', headers=self.headers)
         self.assertEqual(user_redflags.status_code, 200)
         # self.assertIn("user incidents", user_redflags.data.decode())
         location_update = self.app.patch(
-            '/api/v2/red-flags/1/location', data=json.dumps({'location': 23.0235}),
+            '/api/v2/red-flags/1/location', data=json.dumps({'location': "12.12+2.782"}),
                 headers=self.headers, content_type='application/json')
         self.assertEqual(location_update.status_code, 200)
         location_update = json.loads(location_update.data.decode())
@@ -148,17 +148,17 @@ class TestIncident(TestStructure):
         self.assertEqual(change_status.status_code, 200)
         self.assertIn("Status Changed", change_status.data.decode())
         location_status_changed = self.app.patch(
-            '/api/v2/red-flags/1/location', data=json.dumps({'location': 23.0235}),
+            '/api/v2/red-flags/1/location', data=json.dumps({'location': "12.12+2.782"}),
             headers=self.headers, content_type='application/json')
         self.assertEqual(
             location_status_changed.data.decode(),
-            '{"error":"Can only edit location when red flag status is Draft.","status":400}\n')
+            '{"error":"Can only edit location when incidents status is Draft.","status":400}\n')
         comment_status = self.app.patch(
             '/api/v2/red-flags/1/comment', data=json.dumps({'comment': "Police Brutality"}),
             headers=self.headers, content_type='application/json')
         self.assertEqual(
             comment_status.data.decode(),
-            '{"error":"Can only edit comment when red flag status is Draft.","status":400}\n')
+            '{"error":"Can only edit comment when incidents status is Draft.","status":400}\n')
         delete_red_flag = self.app.delete('/api/v2/red-flags/1',
             headers=self.headers)
         self.assertEqual(delete_red_flag.status_code, 200)
@@ -181,7 +181,7 @@ class TestIncident(TestStructure):
             content_type='application/json', headers=self.headers)
         self.assertEqual(user_interventions.status_code, 200)
         location_update = self.app.patch(
-            '/api/v2/interventions/1/location', data=json.dumps({'location': 23.0235}),
+            '/api/v2/interventions/1/location', data=json.dumps({'location': "12.12+2.782"}),
                 headers=self.headers, content_type='application/json')
         self.assertEqual(location_update.status_code, 200)
         update_comment = self.app.patch(
@@ -206,7 +206,7 @@ class TestIncident(TestStructure):
         response = self.app.get('/api/v2/auth/users/1', content_type='application/json', headers=self.headers)
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.data.decode(),
-                         '{"error":"No incidents for user yet.","status":400}\n')    
+                         '{"error":"No user by that ID.","status":400}\n')    
 
     def test_fetch_users_empty_list(self):
         """ Test for when users list is empty and a fetch is attempted."""
@@ -233,6 +233,12 @@ class TestIncident(TestStructure):
         self.assertEqual(
             email_taken.data.decode(),
             '{"error":"Either username or email are already in registered.","status":401}\n')
+        attribute_error = self.app.post(
+            "/api/v2/auth/signup",
+            content_type='application/json',
+            data=json.dumps({}))
+        self.assertEqual(attribute_error.data.decode(),
+            '{"error":"You have not entered this/these user attributes.","missing attributes":"No data was entered or dict is empty.","status":400}\n')
         user_error = self.app.post(
             "/api/v2/auth/signup",
             content_type='application/json',

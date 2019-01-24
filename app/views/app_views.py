@@ -25,7 +25,7 @@ def create_app():
             'status': 404,
             'data': [
                 {
-                    'Issue': "You have entered an unknown URL. NOTE all urls have a 'api/v1/' prefix.",
+                    'Issue': "You have entered an unknown URL. NOTE all urls have a 'api/v2/' prefix.",
                     'message': 'Please do contact Derrick Sekidde for more details on this.'
                 }]
         }), 404
