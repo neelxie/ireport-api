@@ -15,7 +15,7 @@ class DatabaseConnection:
         pprint(self.db_name)
         try:
             self.connection = psycopg2.connect(
-                dbname=self.db_name, user='postgres', host='localhost', password='', port=5432)
+                dbname='flask_api', user='postgres', host='localhost', password='', port=5432)
             self.connection.autocommit = True
             self.cursor = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
             print('Connected to the database successfully')
@@ -66,7 +66,7 @@ class DatabaseConnection:
         query = f"INSERT INTO users ( first_name, last_name, other_name, \
         phone_number, email, user_name, password, is_admin)\
          VALUES ('{first_name}', '{last_name}', '{other_name}', '{phone_number}',\
-          '{email}', '{user_name}', '{password}', '{is_admin}');"
+          '{email}', '{user_name}', '{password}', '{is_admin}')RETURNING *; "
         self.cursor.execute(query)
 
 
@@ -75,9 +75,10 @@ class DatabaseConnection:
 
         query = f"""INSERT INTO {table_name} (created_by, comment, location, \
         image, video) VALUES ('{created_by}', '{comment}', \
-        {location}, '{image}', '{video}'); """
+        {location}, '{image}', '{video}')RETURNING incident_id; """
         self.cursor.execute(query)
-    # cast(location as float)
+        fetched = self.cursor.fetchone()
+        return fetched
 
     def get_incidents(self, table_name):
         query = "SELECT * FROM {};".format(table_name)
@@ -125,7 +126,6 @@ class DatabaseConnection:
         query = "SELECT user_name, password FROM users WHERE user_name='{}' and password='{}';".format(user_name, password)
         self.cursor.execute(query)
         user_exists = self.cursor.fetchone()
-        pprint(user_exists)
         return user_exists
 
     def update_status(self, table_name, status, incident_id):

@@ -29,7 +29,7 @@ class TestIncident(TestStructure):
         print(empty_list)
         self.assertEqual(
             empty_list.data.decode(),
-            '{"data":[{"Message":"sorry! Red Flags list is empty."}],"status":200}\n')
+            '{"data":[{"Message":"sorry! incidents list is empty."}],"status":200}\n')
 
     def test_update_nonexistant_comment(self):
         """ Test method to edit red flag comment."""

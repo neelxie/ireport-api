@@ -70,7 +70,7 @@ class Valid:
     def validate_location_and_comment(self, location, comment):
         """ Method to validate comment and location.
         """
-        if not isinstance(location, float) or location <= 0:
+        if not isinstance(location, float):
             return "Location has to be a valid float."
 
         if not isinstance(comment, str) or len(comment) < 6:

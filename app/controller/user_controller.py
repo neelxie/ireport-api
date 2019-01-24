@@ -78,17 +78,16 @@ class UserController:
                 "error": "Either username or email are already in registered."
             }), 401
 
-        db.add_user(first_name, last_name, other_name, phone_number, email, user_name, password, is_admin)
+        user = db.add_user(first_name, last_name, other_name, phone_number, email, user_name, password, is_admin)
 
         # after successfully adding the user
         # fetch user bse i need to use the database assigned ID 
         # to add it to the token from which i will get it to use it for 'created-BY'
         user = db.check_username(user_name)
-        print(user)
-        fetched = user.get('user_id')
+        user_id = user.get('user_id')
         token = jwt.encode(
-            { 'user_id': fetched, "user_name": user_name, "is_admin": is_admin, 'exp': datetime.datetime.utcnow(
-        ) + datetime.timedelta(minutes=15)}, my_secret_key).decode('UTF-8')
+            { 'user_id': user_id, "user_name": user_name, "is_admin": is_admin, 'exp': datetime.datetime.utcnow(
+        ) + datetime.timedelta(minutes=60)}, my_secret_key).decode('UTF-8')
 
         payload = jwt.decode(token, my_secret_key)
 
@@ -96,7 +95,7 @@ class UserController:
             "status": 201,
             'success':[{
                 'token': token,
-                "payload": payload.get('user_name')
+                "user": user
                 # 'message': f'{user_name} successfully registered'
             }]
         }), 201
@@ -131,27 +130,26 @@ class UserController:
                 "status": 401
             }), 401
 
-        user = db.login(password, user_name)
+        user_true = db.login(password, user_name)
 
-        if user is None:
+        if user_true is None:
             return jsonify({
                 'error': "The log in credentials you entered are wrong.",
                 'status': 401
             }), 401
 
-        # token = "Derek"
-        print(user)
+        user = db.check_username(user_name)
         token = jwt.encode(
             {"user_id": user.get('user_id'), "user_name": user.get('user_name'), \
             "is_admin": user.get('is_admin'), 'exp': datetime.datetime.utcnow(
-        ) + datetime.timedelta(minutes=15)}, my_secret_key).decode('UTF-8')
+        ) + datetime.timedelta(minutes=60)}, my_secret_key).decode('UTF-8')
 
         # payload = jwt.decode(token, my_secret_key)
         return jsonify({
             'status': 200,
             'user logged in': [{
                 'token': token,
-                'success': f'{user_name} successfully logged in.'
+                'user': user
             }]
         }), 200
 
@@ -162,7 +160,7 @@ class UserController:
         if user is None:
             return jsonify({
                 'status': 400,
-                'error': "No incidents for user yet."
+                'error': "No user by that ID."
             }), 400
 
         return jsonify({
