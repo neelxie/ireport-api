@@ -155,7 +155,7 @@ Inside the iReport-api folder.
 
 ## Deployment
 
-*  This app has been deployed on Heroku at the url [here.](https://ireporta.herokuapp.com/api/v1/)
+*  This app has been deployed on Heroku at the url [here.](https://my-ireporta.herokuapp.com/api/v2/)
 
 ## Contribute
 

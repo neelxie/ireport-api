@@ -68,7 +68,7 @@ class TestValidationClass(TestStructure):
         self.assertEqual(
             test_valid.check_user_base(
                 "", "w2", "w22", "sdsdsd"),
-            "First/Last/Other Name all have to be strings of two letters or more.")
+            "Firstname should have only letters between 2 and 15 chaarcters.")
         self.assertEqual(
             test_valid.check_user_base(
                 "Derek", "Derrick", "Kidrice", "  "),
@@ -87,7 +87,7 @@ class TestValidationClass(TestStructure):
         self.assertEqual(
             test_valid.check_credential(
                 "457862556", "asd@hdd.gob", "sd", False),
-            "Password has to be a string and longer than 6 characters.")
+            "Password has have 6 to 15 characters.")
         self.assertEqual(
             test_valid.check_credential(
                 "457862556", "asd@hdd.gob", "sdsdsds", "asasas"),

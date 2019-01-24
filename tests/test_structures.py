@@ -85,12 +85,12 @@ class TestStructure(unittest.TestCase):
 
     def sign_up(self):
         create_ireporter = self.app.post(
-            "/api/v1/auth/signup", content_type='application/json', data=json.dumps(self.test_user))
+            "/api/v2/auth/signup", content_type='application/json', data=json.dumps(self.test_user))
         return create_ireporter
 
     def user_login(self):
         signed_in = self.sign_up()
-        ireporter = self.app.post('/api/v1/auth/login', content_type='application/json', 
+        ireporter = self.app.post('/api/v2/auth/login', content_type='application/json', 
             data=json.dumps({"user_name":"hacker", "password":"asdfghj"}))
         return ireporter
 
