@@ -50,11 +50,10 @@ class UserController:
             user_attributes)
 
         if user_attribute_error is not None:
-            return jsonify({
+            return jsonify({"status": 400,
                 "error": "You have not entered this/these user attributes.",
                 "missing attributes": user_attribute_error,
-                "status": 400,
-            }), 400
+                }), 400
 
         # check if user data is valid if not return an error.
         error = self.validator.check_if_either_function_has_invalid(
@@ -109,10 +108,9 @@ class UserController:
                 "data":[{'message':'sorry! No App users yet.'}],
                 "status": 400
             }), 400
-        return jsonify({
-            'status': 200,
+        return jsonify({'status': 200,
             'users': [user for user in all_users]
-        }), 200
+            }), 200
 
     def sign_in(self):
         """ Class method to get single user by ID.
@@ -133,9 +131,8 @@ class UserController:
         user_true = db.login(password, user_name)
 
         if user_true is None:
-            return jsonify({
-                'error': "The log in credentials you entered are wrong.",
-                'status': 401
+            return jsonify({'status': 401,
+                'error': "The log in credentials you entered are wrong."
             }), 401
 
         user = db.check_username(user_name)

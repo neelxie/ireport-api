@@ -76,12 +76,6 @@ class Valid:
         if not isinstance(comment, str) or len(comment) < 6:
             return "Comment has to be a valid String."
 
-    def check_list(self, my_list):
-        """ Method to check if list is not empty.
-        """
-        if not my_list or len(my_list) < 1:
-            return False
-
     def validate_location_update(self, data):
         """ Class method to validate PATCH location data.
         """
@@ -97,10 +91,10 @@ class Valid:
     def validate_string(self, my_string):
         """ Validation method for a valid string.
         """
-        if not isinstance(my_string, str) or my_string.isalpha() is False or self.check_for_white_spaces(my_string) is False:
+        if not isinstance(my_string, str) or my_string.isspace() or self.check_for_white_spaces(my_string) is False:
             return False
 
-        if my_string.isspace() or len(my_string) > 15 or len(my_string) < 2:
+        if my_string.isalpha() is False  or len(my_string) > 15 or len(my_string) < 2:
             return False
 
     def check_user_base(self, first_str, sec_str, thrd_str, fth_str):

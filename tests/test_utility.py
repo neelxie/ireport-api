@@ -9,6 +9,8 @@ test_valid = Valid()
 class TestValidationClass(TestStructure):
     """ Test Class for validation used in utility."""
 
+    TEST_LIST = []
+
     def test_validate_check_if_either_function_has_invalid(self):
         """ Test to validate check incident method."""
         self.assertEqual(
@@ -29,10 +31,10 @@ class TestValidationClass(TestStructure):
             test_valid.validate_location_and_comment(
                 0.245, 4), "Comment has to be a valid String.")
 
-    def test_validate_list(self):
-        """ Test to check if item is not None."""
-        my_test_list = []
-        self.assertFalse(test_valid.check_list(my_test_list))
+    def check_for_white_spaces(self):
+        """ Test to check if word has spaces."""
+        self.assertFalse(test_valid.check_for_white_spaces(' '))
+        
 
     def test_valid_patch_location(self):
         """ Test to check if data from patch location is valid."""
@@ -69,6 +71,14 @@ class TestValidationClass(TestStructure):
             test_valid.check_user_base(
                 "", "w2", "w22", "sdsdsd"),
             "Firstname should have only letters between 2 and 15 chaarcters.")
+        self.assertEqual(
+            test_valid.check_user_base(
+                "badhdda", "w2", "w22", "sdsdsd"),
+            "Last Name should have only letters between 2 and 15 chaarcters.")
+        self.assertEqual(
+            test_valid.check_user_base(
+                "dsddsdsd", "hshhhshhs", "w22", "sdsdsd"),
+            "Other Name should have only letters between 2 and 15 chaarcters.")
         self.assertEqual(
             test_valid.check_user_base(
                 "Derek", "Derrick", "Kidrice", "  "),
@@ -117,3 +127,8 @@ class TestValidationClass(TestStructure):
         self.assertEqual(
             test_valid.strip_token_of_bearer(
                 "Bearer eyiamthe.greatestcoder.ever"), "eyiamthe.greatestcoder.ever")
+
+    def test_validate_attributes(self):
+        """ Test to validate list attributes."""
+        self.assertEqual(test_valid.valdate_attributes(None, []), "No data was entered or dict is empty.")
+        self.assertEqual(test_valid.valdate_attributes({"cat": 3}, ["dog"]), ["dog"])

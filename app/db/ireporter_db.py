@@ -1,12 +1,16 @@
+""" Database file."""
+from pprint import pprint
 import psycopg2
 import psycopg2.extras
-from pprint import pprint
 import simplejson as json
 import os
 
 class DatabaseConnection:
+    """
+    Database class
+    """
     def __init__(self):
-        
+
         if os.getenv('DB_NAME') == "test_flask":
             self.db_name = 'test_flask'
         else:
@@ -15,7 +19,7 @@ class DatabaseConnection:
         pprint(self.db_name)
         try:
             self.connection = psycopg2.connect(
-                dbname='flask_api', user='postgres', host='localhost', password='', port=5432)
+                dbname=self.db_name, user='postgres', host='localhost', password='', port=5432)
             self.connection.autocommit = True
             self.cursor = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
             print('Connected to the database successfully')
