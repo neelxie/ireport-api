@@ -61,10 +61,22 @@ class UserController:
             self.validator.check_user_base(
                 first_name, last_name, other_name, user_name), self.validator.check_credential(
                 phone_number, email, password, is_admin))
+        
+        if error:
+            return jsonify({
+                'error': error,
+                "status": 400
+            }), 400
 
         # if the username or email are already registered return error.
         username_exist = db.check_username(user_name)
         email_exist = db.check_email(email)
+
+        if username_exist is not None or email_exist is not None: 
+            return jsonify({
+                "status": 401,
+                "error": "Either username or email are already in registered."
+            }), 401
 
         db.add_user(first_name, last_name, other_name, phone_number, email, user_name, password, is_admin)
 
@@ -74,25 +86,11 @@ class UserController:
         user = db.check_username(user_name)
         print(user)
         fetched = user.get('user_id')
-        print(fetched)
         token = jwt.encode(
             { 'user_id': fetched, "user_name": user_name, "is_admin": is_admin, 'exp': datetime.datetime.utcnow(
         ) + datetime.timedelta(minutes=15)}, my_secret_key).decode('UTF-8')
 
         payload = jwt.decode(token, my_secret_key)
-        print(payload)
-
-        if error:
-            return jsonify({
-                'error': error,
-                "status": 400
-            }), 400
-
-        if username_exist is not None or email_exist is not None: 
-            return jsonify({
-                "status": 401,
-                "error": "Either username or email are already in registered."
-            }), 401
 
         return jsonify({
             "status": 201,
