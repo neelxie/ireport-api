@@ -26,10 +26,10 @@ class TestValidationClass(TestStructure):
             test_valid.validate_location_and_comment(
                 "",
                 "just_testing"),
-            "Location has to be a valid float.")
+            "Location requires a + to separate latitude and longitudes")
         self.assertEqual(
             test_valid.validate_location_and_comment(
-                0.245, 4), "Comment has to be a valid String.")
+                "12.22+2.142", 4), "Comment has to be a valid String.")
 
     def check_for_white_spaces(self):
         """ Test to check if word has spaces."""
@@ -39,8 +39,8 @@ class TestValidationClass(TestStructure):
     def test_valid_patch_location(self):
         """ Test to check if data from patch location is valid."""
         self.assertEqual(
-            test_valid.validate_location_update({"location": "d"}),
-            "New location has to be a float.")
+            test_valid.validate_location_update({"location": 12}),
+            "Location has to a valid string.")
 
     def test_comment_update(self):
         """ Test method to validate comment data from patch."""
