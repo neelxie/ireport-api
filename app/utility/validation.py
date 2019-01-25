@@ -67,34 +67,20 @@ class Valid:
         if self.validate_media_file(video) is False:
             return "Video has to be a valid String of either mov or mp4."
 
-    def first_check_location(self, location):
-        """ Validate location."""
-        location_failure = None
-        if isinstance(location, str) is False:
-            location_failure = "Location has to a valid string."
-        elif '+' not in location:
-            location_failure = "Location requires a + to separate latitude and longitudes"
-        else:
-            location_failure = False
-        return location_failure
+    def check_location(self, location):
+        """ Check location input
+        """
+        if not location or not isinstance(location, str):
+            return False
+        elif len(location) < 4 or self.check_for_white_spaces(location) is False:
+            return False
 
-    def last_location(self, location):
-        """ prove location is valid. """
-        result = self.first_check_location(location)
-        if result is not False:
-            return result
-        lat, lon = location.split('+')
-        lat = lat.strip()
-        lon = lon.strip()
-        if isinstance(float(lat), float) is False or isinstance(float(lon), float) is False:
-            return "Latitude and longitudes have to be decimals"
 
     def validate_location_and_comment(self, location, comment):
         """ Method to validate comment and location.
         """
-        error_loc = self.last_location(location)
-        if error_loc:
-            return error_loc
+        if self.check_location(location) is False:
+            return "incident location should be an address in without spaces."
 
         if not isinstance(comment, str) or len(comment) < 6:
             return "Comment has to be a valid String."
@@ -102,9 +88,8 @@ class Valid:
     def validate_location_update(self, data):
         """ Class method to validate PATCH location data.
         """
-        error_loc = self.last_location(data)
-        if error_loc:
-            return error_loc
+        if not data or not isinstance(data, str) or len(data) < 5:
+            return "New location should be an address in words."
 
     def validate_comment_update(self, update):
         """ Class method to validate new comment data.
