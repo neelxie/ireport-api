@@ -52,11 +52,11 @@ class TestIncident(TestStructure):
     def test_update_location(self):
         """ Test method to change red flag location."""
         location_error = self.app.patch(
-            '/api/v2/red-flags/1/location', data=json.dumps({'location': "entebbe"}),
+            '/api/v2/red-flags/1/location', data=json.dumps({'location': 55}),
                               content_type='application/json' , headers=self.headers)
         self.assertEqual(
             location_error.data.decode(),
-            '{"error":"Location requires a + to separate latitude and longitudes","status":400}\n')
+            '{"error":"New location should be an address in words.","status":400}\n')
         resp = self.app.patch(
             '/api/v2/red-flags/1/location', data=json.dumps({'location': "12.12+2.782"}),
                               content_type='application/json' , headers=self.headers)
