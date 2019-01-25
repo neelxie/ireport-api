@@ -141,7 +141,7 @@ class DatabaseConnection:
         self.cursor.execute(query)
 
     def update_location(self, table_name, location, incident_id):
-        query = "UPDATE {} SET location = {} WHERE incident_id = '{}';".format(table_name, location, incident_id)
+        query = "UPDATE {} SET location = '{}' WHERE incident_id = '{}';".format(table_name, location, incident_id)
         self.cursor.execute(query)
 
     def delete_incident(self, table_name, incident_id):

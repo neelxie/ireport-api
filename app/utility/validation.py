@@ -67,12 +67,20 @@ class Valid:
         if self.validate_media_file(video) is False:
             return "Video has to be a valid String of either mov or mp4."
 
+    def check_location(self, location):
+        """ Check location input
+        """
+        if not location or not isinstance(location, str):
+            return False
+        elif len(location) < 4 or self.check_for_white_spaces(location) is False:
+            return False
+
 
     def validate_location_and_comment(self, location, comment):
         """ Method to validate comment and location.
         """
-        if not location or not isinstance(location, str) or len(location) < 5:
-            return "incident location should be an address in words."
+        if self.check_location(location) is False:
+            return "incident location should be an address in without spaces."
 
         if not isinstance(comment, str) or len(comment) < 6:
             return "Comment has to be a valid String."

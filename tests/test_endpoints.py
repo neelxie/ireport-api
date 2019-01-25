@@ -58,7 +58,7 @@ class TestIncident(TestStructure):
             location_error.data.decode(),
             '{"error":"New location should be an address in words.","status":400}\n')
         resp = self.app.patch(
-            '/api/v2/red-flags/1/location', data=json.dumps({'location': "12.12+2.782"}),
+            '/api/v2/red-flags/1/location', data=json.dumps({'location': "kirastreet"}),
                               content_type='application/json' , headers=self.headers)
         self.assertEqual(
             resp.data.decode(),
@@ -130,7 +130,7 @@ class TestIncident(TestStructure):
         self.assertEqual(user_redflags.status_code, 200)
         # self.assertIn("user incidents", user_redflags.data.decode())
         location_update = self.app.patch(
-            '/api/v2/red-flags/1/location', data=json.dumps({'location': "12.12+2.782"}),
+            '/api/v2/red-flags/1/location', data=json.dumps({'location': "oldkampala"}),
                 headers=self.headers, content_type='application/json')
         self.assertEqual(location_update.status_code, 200)
         location_update = json.loads(location_update.data.decode())
@@ -148,7 +148,7 @@ class TestIncident(TestStructure):
         self.assertEqual(change_status.status_code, 200)
         self.assertIn("Status Changed", change_status.data.decode())
         location_status_changed = self.app.patch(
-            '/api/v2/red-flags/1/location', data=json.dumps({'location': "12.12+2.782"}),
+            '/api/v2/red-flags/1/location', data=json.dumps({'location': "williamstreet"}),
             headers=self.headers, content_type='application/json')
         self.assertEqual(
             location_status_changed.data.decode(),
@@ -181,7 +181,7 @@ class TestIncident(TestStructure):
             content_type='application/json', headers=self.headers)
         self.assertEqual(user_interventions.status_code, 200)
         location_update = self.app.patch(
-            '/api/v2/interventions/1/location', data=json.dumps({'location': "12.12+2.782"}),
+            '/api/v2/interventions/1/location', data=json.dumps({'location':'ntinda'}),
                 headers=self.headers, content_type='application/json')
         self.assertEqual(location_update.status_code, 200)
         update_comment = self.app.patch(

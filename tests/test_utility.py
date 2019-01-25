@@ -24,12 +24,12 @@ class TestValidationClass(TestStructure):
         """ Test for the validation class method validate_location_and_comment."""
         self.assertEqual(
             test_valid.validate_location_and_comment(
-                "",
+                "no",
                 "just_testing"),
-            "incident location should be an address in words.")
+            "incident location should be an address in without spaces.")
         self.assertEqual(
             test_valid.validate_location_and_comment(
-                "12.22+2.142", 4), "Comment has to be a valid String.")
+                "kanjokya", 4), "Comment has to be a valid String.")
 
     def check_for_white_spaces(self):
         """ Test to check if word has spaces."""

@@ -23,7 +23,7 @@ class TestStructure(unittest.TestCase):
         self.test_redflag = dict(
             comment = "Tests for ireporter",
             status="Draft",
-            location="12.22+2.142",
+            location="kololo",
             image= "image.jpg",
             video= "video.mp4",
             created_on="2018-11-29 09:04:38.919951",
@@ -33,7 +33,7 @@ class TestStructure(unittest.TestCase):
             comment = 55,
             status="Draft",
             record_type="RedFlag",
-            location="%$#%",
+            location=555,
             image= 55,
             video= 55,
             created_on="2018-11-29 09:04:38.919951",
