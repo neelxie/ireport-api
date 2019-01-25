@@ -19,7 +19,7 @@ class DatabaseConnection:
         pprint(self.db_name)
         try:
             self.connection = psycopg2.connect(
-                dbname='test_flask', user='postgres', host='localhost', password='', port=5432)
+                dbname=self.db_name, user='postgres', host='localhost', password='', port=5432)
             self.connection.autocommit = True
             self.cursor = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
             print('Connected to the database successfully')
