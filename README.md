@@ -1,6 +1,6 @@
 # ireport-api
 iReporter enables any/every citizen to bring any form of corruption to the notice of appropriate authorities and the general public. Users can also report on things that need government intervention, or government agencies can take on.
-
+[![Build Status](https://travis-ci.org/neelxie/ireport-api.svg?branch=challenge3)](https://travis-ci.org/neelxie/ireport-api)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/a439c5890cce4f94b3b50e53036c014e)](https://www.codacy.com/app/neelxie/ireport-api?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=neelxie/ireport-api&amp;utm_campaign=Badge_Grade)
 [![Coverage Status](https://coveralls.io/repos/github/neelxie/ireport-api/badge.svg?branch=ft-deploy)](https://coveralls.io/github/neelxie/ireport-api?branch=ft-deploy)
 [![Maintainability](https://api.codeclimate.com/v1/badges/aee377f03ebc940278a0/maintainability)](https://codeclimate.com/github/neelxie/ireport-api/maintainability)
