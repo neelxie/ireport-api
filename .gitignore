@@ -1,0 +1,8 @@
+.vscode
+coverage/*
+venv/
+env/
+__pycache__
+*.pyc
+.prod_env
+.test_env
